@@ -14,6 +14,13 @@ namespace TFBackEnd.Api.Data
         {
         }
 
-        public DbSet<TFBackEnd.Api.Models.Telefonos> Telefonos { get; set; }
+        public DbSet<Telefonos> Telefonos { get; set; }
+
+        public DbSet<TFBackEnd.Api.Models.apps> apps { get; set; }
+
+        public DbSet<TFBackEnd.Api.Models.Instalaciones> Instalaciones { get; set; }
+
+        public DbSet<TFBackEnd.Api.Models.Operarios> Operarios { get; set; }
+ 
     }
 }
