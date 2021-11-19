@@ -7,6 +7,11 @@ namespace TFBackEnd.Api.Models
 {
     public class Telefonos
     {
+        public Telefonos()
+        {
+            Sensors = new HashSet<Sensor>();
+        }
+
         public int id { get; set; }
         public string marca { get; set; }
         public string modelo { get; set; }
@@ -15,5 +20,7 @@ namespace TFBackEnd.Api.Models
         public int idInstalacion { get; set; }
 
         public virtual Instalaciones Instalaciones { get; set; }
+
+        public virtual ICollection<Sensor> Sensors { get; set; }
     }
 }
