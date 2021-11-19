@@ -21,6 +21,8 @@ namespace TFBackEnd.Api.Data
         public DbSet<TFBackEnd.Api.Models.Instalaciones> Instalaciones { get; set; }
 
         public DbSet<TFBackEnd.Api.Models.Operarios> Operarios { get; set; }
+
+        public DbSet<TFBackEnd.Api.Models.Sensor> Sensor { get; set; }
  
     }
 }
