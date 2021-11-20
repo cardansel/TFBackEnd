@@ -9,7 +9,7 @@ using TFBackEnd.Api.Data;
 namespace TFBackEnd.Api.Migrations
 {
     [DbContext(typeof(TFBackEndApiContext))]
-    [Migration("20211120143120_InitialCreateSchema")]
+    [Migration("20211120150253_InitialCreateSchema")]
     partial class InitialCreateSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,9 +38,6 @@ namespace TFBackEnd.Api.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdInstalacion")
                         .HasColumnType("int");
 
                     b.Property<int?>("InstalacionId")
@@ -82,9 +79,6 @@ namespace TFBackEnd.Api.Migrations
                     b.Property<string>("Apellido")
                         .HasColumnType("text");
 
-                    b.Property<int>("IdInstalacion")
-                        .HasColumnType("int");
-
                     b.Property<int?>("InstalacionId")
                         .HasColumnType("int");
 
@@ -116,9 +110,6 @@ namespace TFBackEnd.Api.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdInstalacion")
                         .HasColumnType("int");
 
                     b.Property<int?>("InstalacionId")

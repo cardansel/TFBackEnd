@@ -38,9 +38,6 @@ namespace TFBackEnd.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("IdInstalacion")
-                        .HasColumnType("int");
-
                     b.Property<int?>("InstalacionId")
                         .HasColumnType("int");
 
@@ -80,9 +77,6 @@ namespace TFBackEnd.Api.Migrations
                     b.Property<string>("Apellido")
                         .HasColumnType("text");
 
-                    b.Property<int>("IdInstalacion")
-                        .HasColumnType("int");
-
                     b.Property<int?>("InstalacionId")
                         .HasColumnType("int");
 
@@ -114,9 +108,6 @@ namespace TFBackEnd.Api.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdInstalacion")
                         .HasColumnType("int");
 
                     b.Property<int?>("InstalacionId")

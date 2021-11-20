@@ -11,7 +11,7 @@ namespace TFBackEnd.Models
         public string Nombre { get; set; }
         public string Apellido { get; set; }
 
-        public int IdInstalacion { get; set; }
+        //public int IdInstalacion { get; set; }
 
         public virtual Instalacion Instalacion { get; set; }
     }

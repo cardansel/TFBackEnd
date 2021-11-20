@@ -16,7 +16,7 @@ namespace TFBackEnd.Models
         public string Marca { get; set; }
         public string Modelo { get; set; }
         public float Precio { get; set; }
-        public int IdInstalacion { get; set; }
+       // public int IdInstalacion { get; set; }
 
         public virtual Instalacion Instalacion { get; set; }
         public virtual ICollection<Sensor> Sensor { get; set; }

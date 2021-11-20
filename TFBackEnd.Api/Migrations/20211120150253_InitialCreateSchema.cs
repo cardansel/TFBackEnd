@@ -42,7 +42,6 @@ namespace TFBackEnd.Api.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Nombre = table.Column<string>(type: "text", nullable: true),
-                    IdInstalacion = table.Column<int>(type: "int", nullable: false),
                     InstalacionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -64,7 +63,6 @@ namespace TFBackEnd.Api.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Nombre = table.Column<string>(type: "text", nullable: true),
                     Apellido = table.Column<string>(type: "text", nullable: true),
-                    IdInstalacion = table.Column<int>(type: "int", nullable: false),
                     InstalacionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -87,7 +85,6 @@ namespace TFBackEnd.Api.Migrations
                     Marca = table.Column<string>(type: "text", nullable: true),
                     Modelo = table.Column<string>(type: "text", nullable: true),
                     Precio = table.Column<float>(type: "float", nullable: false),
-                    IdInstalacion = table.Column<int>(type: "int", nullable: false),
                     InstalacionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
