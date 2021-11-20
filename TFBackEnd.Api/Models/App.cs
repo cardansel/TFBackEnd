@@ -5,17 +5,11 @@ using System.Threading.Tasks;
 
 namespace TFBackEnd.Models
 {
-    public class Sensor
+    public class App
     {
-        public Sensor()
-        {
-            Telefonos = new HashSet<Telefono>();
-        }
-
-
         public int Id { get; set; }
         public string Nombre { get; set; }
-
-        public virtual ICollection<Telefono> Telefonos { get; set; }
+        public int IdInstalacion { get; set; }
+        public virtual Instalacion Instalacion { get; set; }
     }
 }

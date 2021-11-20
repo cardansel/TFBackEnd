@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using TFBackEnd.Api.Models;
+
+using TFBackEnd.Models;
 
 namespace TFBackEnd.Api.Data
 {
@@ -14,15 +15,15 @@ namespace TFBackEnd.Api.Data
         {
         }
 
-        public DbSet<Telefonos> Telefonos { get; set; }
+        public DbSet<Telefono> Telefonos { get; set; }
 
-        public DbSet<TFBackEnd.Api.Models.apps> apps { get; set; }
+        public DbSet<App> Apps { get; set; }
 
-        public DbSet<TFBackEnd.Api.Models.Instalaciones> Instalaciones { get; set; }
+        public DbSet<Instalacion> Instalaciones { get; set; }
 
-        public DbSet<TFBackEnd.Api.Models.Operarios> Operarios { get; set; }
+        public DbSet<Operario> Operarios { get; set; }
 
-        public DbSet<TFBackEnd.Api.Models.Sensor> Sensor { get; set; }
+        public DbSet<Sensor> Sensor { get; set; }
  
     }
 }

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TFBackEnd.Api.Data;
 
 namespace TFBackEnd.Api.Migrations
 {
     [DbContext(typeof(TFBackEndApiContext))]
-    partial class TFBackEndApiContextModelSnapshot : ModelSnapshot
+    [Migration("20211120143120_InitialCreateSchema")]
+    partial class InitialCreateSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
