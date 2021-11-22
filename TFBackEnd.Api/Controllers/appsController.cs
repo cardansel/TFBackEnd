@@ -23,14 +23,14 @@ namespace TFBackEnd.Api.Controllers
 
         // GET: api/apps
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<apps>>> Getapps()
+        public async Task<ActionResult<IEnumerable<app>>> Getapps()
         {
             return await _context.apps.ToListAsync();
         }
 
         // GET: api/apps/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<apps>> Getapps(int id)
+        public async Task<ActionResult<app>> Getapps(int id)
         {
             var apps = await _context.apps.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace TFBackEnd.Api.Controllers
         // PUT: api/apps/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> Putapps(int id, apps apps)
+        public async Task<IActionResult> Putapps(int id, app apps)
         {
             if (id != apps.id)
             {
@@ -76,7 +76,7 @@ namespace TFBackEnd.Api.Controllers
         // POST: api/apps
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<apps>> Postapps(apps apps)
+        public async Task<ActionResult<app>> Postapps(app apps)
         {
             _context.apps.Add(apps);
             await _context.SaveChangesAsync();

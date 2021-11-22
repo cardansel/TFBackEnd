@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using MySql.EntityFrameworkCore.Metadata;
 
 namespace TFBackEnd.Api.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class inicio1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,8 +13,8 @@ namespace TFBackEnd.Api.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    nombre = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    nombre = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -25,9 +26,9 @@ namespace TFBackEnd.Api.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    nombres = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    apellidos = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    nombre = table.Column<string>(type: "text", nullable: true),
+                    apellido = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -39,26 +40,26 @@ namespace TFBackEnd.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Exitosa = table.Column<bool>(type: "bit", nullable: false),
-                    fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Exitosa = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    fecha = table.Column<DateTime>(type: "datetime", nullable: false),
                     idOperario = table.Column<int>(type: "int", nullable: false),
-                    idApps = table.Column<int>(type: "int", nullable: false),
-                    Operariosid = table.Column<int>(type: "int", nullable: true),
-                    Appsid = table.Column<int>(type: "int", nullable: true)
+                    idApp = table.Column<int>(type: "int", nullable: false),
+                    Operarioid = table.Column<int>(type: "int", nullable: true),
+                    Appid = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Instalaciones", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Instalaciones_apps_Appsid",
-                        column: x => x.Appsid,
+                        name: "FK_Instalaciones_apps_Appid",
+                        column: x => x.Appid,
                         principalTable: "apps",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Instalaciones_Operarios_Operariosid",
-                        column: x => x.Operariosid,
+                        name: "FK_Instalaciones_Operarios_Operarioid",
+                        column: x => x.Operarioid,
                         principalTable: "Operarios",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -69,38 +70,38 @@ namespace TFBackEnd.Api.Migrations
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    marca = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    modelo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    precio = table.Column<float>(type: "real", nullable: false),
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    marca = table.Column<string>(type: "text", nullable: true),
+                    modelo = table.Column<string>(type: "text", nullable: true),
+                    precio = table.Column<float>(type: "float", nullable: false),
                     idInstalacion = table.Column<int>(type: "int", nullable: false),
-                    InstalacionesId = table.Column<int>(type: "int", nullable: true)
+                    InstalacioneId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Telefonos", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Telefonos_Instalaciones_InstalacionesId",
-                        column: x => x.InstalacionesId,
+                        name: "FK_Telefonos_Instalaciones_InstalacioneId",
+                        column: x => x.InstalacioneId,
                         principalTable: "Instalaciones",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Instalaciones_Appsid",
+                name: "IX_Instalaciones_Appid",
                 table: "Instalaciones",
-                column: "Appsid");
+                column: "Appid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Instalaciones_Operariosid",
+                name: "IX_Instalaciones_Operarioid",
                 table: "Instalaciones",
-                column: "Operariosid");
+                column: "Operarioid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Telefonos_InstalacionesId",
+                name: "IX_Telefonos_InstalacioneId",
                 table: "Telefonos",
-                column: "InstalacionesId");
+                column: "InstalacioneId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

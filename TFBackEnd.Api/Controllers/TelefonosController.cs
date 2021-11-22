@@ -23,14 +23,14 @@ namespace TFBackEnd.Api.Controllers
 
         // GET: api/Telefonos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Telefonos>>> GetTelefonos()
+        public async Task<ActionResult<IEnumerable<Telefono>>> GetTelefonos()
         {
             return await _context.Telefonos.ToListAsync();
         }
 
         // GET: api/Telefonos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Telefonos>> GetTelefonos(int id)
+        public async Task<ActionResult<Telefono>> GetTelefonos(int id)
         {
             var telefonos = await _context.Telefonos.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace TFBackEnd.Api.Controllers
         // PUT: api/Telefonos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTelefonos(int id, Telefonos telefonos)
+        public async Task<IActionResult> PutTelefonos(int id, Telefono telefonos)
         {
             if (id != telefonos.id)
             {
@@ -76,7 +76,7 @@ namespace TFBackEnd.Api.Controllers
         // POST: api/Telefonos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Telefonos>> PostTelefonos(Telefonos telefonos)
+        public async Task<ActionResult<Telefono>> PostTelefonos(Telefono telefonos)
         {
             _context.Telefonos.Add(telefonos);
             await _context.SaveChangesAsync();

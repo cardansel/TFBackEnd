@@ -23,14 +23,14 @@ namespace TFBackEnd.Api.Controllers
 
         // GET: api/Instalaciones
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Instalaciones>>> GetInstalaciones()
+        public async Task<ActionResult<IEnumerable<Instalacione>>> GetInstalaciones()
         {
             return await _context.Instalaciones.ToListAsync();
         }
 
         // GET: api/Instalaciones/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Instalaciones>> GetInstalaciones(int id)
+        public async Task<ActionResult<Instalacione>> GetInstalaciones(int id)
         {
             var instalaciones = await _context.Instalaciones.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace TFBackEnd.Api.Controllers
         // PUT: api/Instalaciones/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutInstalaciones(int id, Instalaciones instalaciones)
+        public async Task<IActionResult> PutInstalaciones(int id, Instalacione instalaciones)
         {
             if (id != instalaciones.Id)
             {
@@ -76,7 +76,7 @@ namespace TFBackEnd.Api.Controllers
         // POST: api/Instalaciones
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Instalaciones>> PostInstalaciones(Instalaciones instalaciones)
+        public async Task<ActionResult<Instalacione>> PostInstalaciones(Instalacione instalaciones)
         {
             _context.Instalaciones.Add(instalaciones);
             await _context.SaveChangesAsync();

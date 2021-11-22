@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TFBackEnd.Api.Models
 {
-    public class Telefonos
+    public class Telefono
     {
         public int id { get; set; }
         public string marca { get; set; }
@@ -14,6 +14,6 @@ namespace TFBackEnd.Api.Models
 
         public int idInstalacion { get; set; }
 
-        public virtual Instalaciones Instalaciones { get; set; }
+        public virtual Instalacione Instalacione { get; set; }
     }
 }

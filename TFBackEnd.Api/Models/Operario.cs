@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace TFBackEnd.Api.Models
 {
-    public class apps
+    public class Operario
     {
         public int id { get; set; }
         public string nombre { get; set; }
-
-        public virtual ICollection<Instalaciones> Instalaciones { get; set; }
+        public string apellido { get; set; }
+        public virtual ICollection<Instalacione> Instalacione { get; set; }
     }
 }

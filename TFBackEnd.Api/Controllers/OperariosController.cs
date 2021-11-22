@@ -23,14 +23,14 @@ namespace TFBackEnd.Api.Controllers
 
         // GET: api/Operarios
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Operarios>>> GetOperarios()
+        public async Task<ActionResult<IEnumerable<Operario>>> GetOperarios()
         {
             return await _context.Operarios.ToListAsync();
         }
 
         // GET: api/Operarios/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Operarios>> GetOperarios(int id)
+        public async Task<ActionResult<Operario>> GetOperarios(int id)
         {
             var operarios = await _context.Operarios.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace TFBackEnd.Api.Controllers
         // PUT: api/Operarios/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOperarios(int id, Operarios operarios)
+        public async Task<IActionResult> PutOperarios(int id, Operario operarios)
         {
             if (id != operarios.id)
             {
@@ -76,7 +76,7 @@ namespace TFBackEnd.Api.Controllers
         // POST: api/Operarios
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Operarios>> PostOperarios(Operarios operarios)
+        public async Task<ActionResult<Operario>> PostOperarios(Operario operarios)
         {
             _context.Operarios.Add(operarios);
             await _context.SaveChangesAsync();
