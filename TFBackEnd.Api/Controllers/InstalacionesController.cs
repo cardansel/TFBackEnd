@@ -25,7 +25,18 @@ namespace TFBackEnd.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Instalaciones>>> GetInstalaciones()
         {
-            return await _context.Instalaciones.ToListAsync();
+
+            try
+            {
+                return await _context.Instalaciones.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+            
+            
         }
 
         // GET: api/Instalaciones/5
