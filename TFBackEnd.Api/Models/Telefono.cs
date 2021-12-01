@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TFBackEnd.Models
+namespace TFBackEnd.Api.Models
 {
     public class Telefono
     {
         public Telefono()
         {
-            Sensor = new HashSet<Sensor>();
-        }
+            Sensores = new HashSet<Sensor>();
 
+        }
         public int Id { get; set; }
         public string Marca { get; set; }
         public string Modelo { get; set; }
         public float Precio { get; set; }
-       // public int IdInstalacion { get; set; }
 
-        public virtual Instalacion Instalacion { get; set; }
-        public virtual ICollection<Sensor> Sensor { get; set; }
+        public virtual ICollection<Instalacion> Instalaciones { get; set; }
+
+        public virtual ICollection<Sensor> Sensores { get; set; }
     }
 }

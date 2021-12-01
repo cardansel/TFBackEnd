@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TFBackEnd.Models
+namespace TFBackEnd.Api.Models
 {
     public class Sensor
     {
@@ -11,8 +11,6 @@ namespace TFBackEnd.Models
         {
             Telefonos = new HashSet<Telefono>();
         }
-
-
         public int Id { get; set; }
         public string Nombre { get; set; }
 

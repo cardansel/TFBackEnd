@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TFBackEnd.Models
+namespace TFBackEnd.Api.Models
 {
     public class Instalacion
     {
@@ -11,8 +11,8 @@ namespace TFBackEnd.Models
         public bool Exitosa { get; set; }
         public DateTime Fecha { get; set; }
 
-        public virtual ICollection<Telefono> Telefonos { get; set; }
-        public virtual ICollection<App> Apps { get; set; }
-        public virtual  ICollection<Operario> Operarios { get; set; }
+        public virtual Operario Operario { get; set; }
+        public virtual App App { get; set; }
+        public virtual Telefono Telefono { get; set; }
     }
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TFBackEnd.Api.Models;
 
-using TFBackEnd.Models;
 
 namespace TFBackEnd.Api.Data
 {
