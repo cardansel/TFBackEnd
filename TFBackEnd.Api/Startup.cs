@@ -36,7 +36,7 @@ namespace TFBackEnd.Api
             });
 
             services.AddDbContext<TFBackEndApiContext>(options =>
-                    options.UseMySQL(Configuration.GetConnectionString("TFBackEndApiContext")));
+                    options.UseSqlServer(Configuration.GetConnectionString("TFBackEndApiContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

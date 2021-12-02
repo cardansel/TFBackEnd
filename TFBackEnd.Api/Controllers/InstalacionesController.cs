@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TFBackEnd.Api.Data;
 using TFBackEnd.Api.Models;
+using TFBackEnd.Api.Models.ViewModels;
 
 namespace TFBackEnd.Api.Controllers
 {
@@ -23,25 +24,37 @@ namespace TFBackEnd.Api.Controllers
 
         // GET: api/Instalaciones
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Instalaciones>>> GetInstalaciones()
+        public async Task<ActionResult<IEnumerable<InstalacionViewModel>>> GetInstalaciones()
         {
+            var lstInstall = new List<InstalacionViewModel>();
+
 
             try
             {
-                return await _context.Instalaciones.ToListAsync();
+                lstInstall =await (from i in _context.Instalaciones
+                              join o in _context.Operarios on i.Operario.Id equals o.Id
+                              join a in _context.Apps on i.App.Id equals a.Id
+                              select new InstalacionViewModel
+                              {
+                                  Id=i.Id,
+                                  Exitosa=i.Exitosa,
+                                  fecha=i.Fecha,
+                                  Operario=o.Nombre,
+                                  App=a.Nombre
+                              }).ToListAsync();
             }
             catch (Exception ex)
             {
 
                 throw new Exception(ex.ToString());
             }
-            
-            
+
+            return lstInstall;
         }
 
         // GET: api/Instalaciones/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Instalaciones>> GetInstalaciones(int id)
+        public async Task<ActionResult<Instalacion>> GetInstalaciones(int id)
         {
             var instalaciones = await _context.Instalaciones.FindAsync(id);
 
@@ -56,7 +69,7 @@ namespace TFBackEnd.Api.Controllers
         // PUT: api/Instalaciones/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutInstalaciones(int id, Instalaciones instalaciones)
+        public async Task<IActionResult> PutInstalaciones(int id, Instalacion instalaciones)
         {
             if (id != instalaciones.Id)
             {
@@ -87,7 +100,7 @@ namespace TFBackEnd.Api.Controllers
         // POST: api/Instalaciones
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Instalaciones>> PostInstalaciones(Instalaciones instalaciones)
+        public async Task<ActionResult<Instalacion>> PostInstalaciones(Instalacion instalaciones)
         {
             _context.Instalaciones.Add(instalaciones);
             await _context.SaveChangesAsync();
