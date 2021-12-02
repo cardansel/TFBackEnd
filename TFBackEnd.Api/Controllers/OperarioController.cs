@@ -24,20 +24,26 @@ namespace TFBackEnd.Api.Controllers
         }
 
         #region GetAll
-        public async Task<ActionResult<IEnumerable<OperarioViewModel>>>GetAll()
-        {
 
+        /// <summary>
+        /// Metodo para mostrar los registro de
+        /// los operarios
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<OperarioViewModel>>> GetAll()
+        {
             var lstOperario = new List<OperarioViewModel>();
 
             try
             {
-                lstOperario =await (from o in _context.Operarios
-                               select new OperarioViewModel
-                               {
-                                   Id = o.Id,
-                                   Nombre = o.Nombre,
-                                   Apellido = o.Apellido
-                               }).ToListAsync();
+                lstOperario = await (from o in _context.Operarios
+                                     select new OperarioViewModel
+                                     {
+                                         Id = o.Id,
+                                         Nombre = o.Nombre,
+                                         Apellido = o.Apellido
+                                     }).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -45,7 +51,7 @@ namespace TFBackEnd.Api.Controllers
                 throw new Exception(ex.ToString());
             }
 
-            return  lstOperario;
+            return lstOperario;
         }
         #endregion
 
