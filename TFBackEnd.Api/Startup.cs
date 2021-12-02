@@ -18,6 +18,7 @@ namespace TFBackEnd.Api
 {
     public class Startup
     {
+        readonly string MiCors = "MiCors";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,10 +31,20 @@ namespace TFBackEnd.Api
         {
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+
+            services.AddCors(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TFBackEnd.Api", Version = "v1" });
+                options.AddPolicy(name: MiCors,
+                             builder =>
+                             {
+                                 builder.WithOrigins("*");
+                             }
+                      );
             });
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "TFBackEnd.Api", Version = "v1" });
+            //});
 
             services.AddDbContext<TFBackEndApiContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("TFBackEndApiContext")));
@@ -45,14 +56,14 @@ namespace TFBackEnd.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TFBackEnd.Api v1"));
+                //app.UseSwagger();
+                //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TFBackEnd.Api v1"));
             }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors(MiCors);
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
