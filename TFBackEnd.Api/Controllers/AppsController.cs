@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TFBackEnd.Api.Data;
 using TFBackEnd.Api.Models;
 using TFBackEnd.Api.Models.Response;
-using TFBackEnd.Api.Models.ViewModels;
 
 namespace TFBackEnd.Api.Controllers
 {
@@ -16,52 +15,92 @@ namespace TFBackEnd.Api.Controllers
     [ApiController]
     public class AppsController : ControllerBase
     {
-
-        protected readonly TFBackEndApiContext _Context;
+        private readonly TFBackEndApiContext _context;
 
         public AppsController(TFBackEndApiContext context)
         {
-            _Context = context;
+            _context = context;
         }
 
-        #region GetAll
-        /// <summary>
-        /// Metodo que recupera todo el listado
-        /// de las aplicaciones
-        /// </summary>
-        /// <returns></returns>
-        public async Task<ActionResult<IEnumerable<AppViewModel>>> GetAll()
+        // GET: api/Apps
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<App>>> GetApps()
         {
-            var lstApp = new List<AppViewModel>();
+            var lstApp = new List<App>();
             Respuesta oRespuesta = new Respuesta();
 
             try
             {
-                lstApp = await (from a in _Context.Apps
-                                select new AppViewModel
-                                {
-                                    Id = a.Id,
-                                    Nombre = a.Nombre
 
-                                }).ToListAsync();
+                lstApp = await _context.Apps.ToListAsync();
 
-                oRespuesta.Exito = 1;
+                oRespuesta.Paso = 1;
                 oRespuesta.Data = lstApp;
+
                 return lstApp;
+
             }
             catch (Exception ex)
             {
+                oRespuesta.Mensaje = ex.Message;
+            }
+            return Ok(oRespuesta);
 
-                oRespuesta.Mensaje=ex.Message;
-  
+        }
+
+        // GET: api/Apps/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<App>> GetApp(int id)
+        {
+            var app = await _context.Apps.FindAsync(id);
+
+            if (app == null)
+            {
+                return NotFound();
             }
 
-          return Ok(oRespuesta);
-            
+            return app;
         }
-        #endregion
 
-        #region Save
+        // PUT: api/Apps/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutApp(int id, App app)
+        {
+
+            Respuesta oRespuesta = new Respuesta();
+
+            if (id != app.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(app).State = EntityState.Modified;
+
+            try
+            {
+                oRespuesta.Paso = 1;
+                oRespuesta.Data = app;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AppExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(oRespuesta);
+                }
+            }
+
+            return NoContent();
+        }
+
+        // POST: api/Apps
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
         public async Task<ActionResult<App>> PostApp(App app)
         {
             Respuesta oRespuesta = new Respuesta();
@@ -70,22 +109,39 @@ namespace TFBackEnd.Api.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _Context.Apps.Add(app);
-                    await _Context.SaveChangesAsync();
-                    oRespuesta.Exito = 1;
+                    _context.Apps.Add(app);
+                    oRespuesta.Paso = 1;
                     oRespuesta.Data = app;
-                }
 
-                return CreatedAtAction("GetAll", new { id = app.Id }, app);
+                    await _context.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {
-
-                oRespuesta.Mensaje = ex.Message;
+                 oRespuesta.Mensaje = ex.Message;
             }
-                return Ok(oRespuesta);
-
+            return CreatedAtAction("GetApp", new { id = app.Id }, app);
         }
-        #endregion
+
+        // DELETE: api/Apps/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteApp(int id)
+        {
+            var app = await _context.Apps.FindAsync(id);
+            if (app == null)
+            {
+                return NotFound();
+            }
+
+            _context.Apps.Remove(app);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool AppExists(int id)
+        {
+            return _context.Apps.Any(e => e.Id == id);
+        }
     }
 }

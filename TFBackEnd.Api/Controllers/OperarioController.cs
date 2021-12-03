@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TFBackEnd.Api.Data;
 using TFBackEnd.Api.Models;
+using TFBackEnd.Api.Models.Response;
 using TFBackEnd.Api.Models.ViewModels;
 
 namespace TFBackEnd.Api.Controllers
@@ -34,7 +35,7 @@ namespace TFBackEnd.Api.Controllers
         public async Task<ActionResult<IEnumerable<OperarioViewModel>>> GetAll()
         {
             var lstOperario = new List<OperarioViewModel>();
-
+            Respuesta oRespuesta = new Respuesta();
             try
             {
                 lstOperario = await (from o in _context.Operarios
@@ -44,14 +45,23 @@ namespace TFBackEnd.Api.Controllers
                                          Nombre = o.Nombre,
                                          Apellido = o.Apellido
                                      }).ToListAsync();
+
+                oRespuesta.Paso = 1;
+                oRespuesta.Data = lstOperario;
+
+                return lstOperario;
+
             }
             catch (Exception ex)
             {
 
-                throw new Exception(ex.ToString());
+                oRespuesta.Mensaje = ex.Message;
+
             }
 
-            return lstOperario;
+            return Ok(oRespuesta);
+
+
         }
         #endregion
 

@@ -12,6 +12,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Controllers\AppsController000" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Controllers\AppsController000" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.12" />
