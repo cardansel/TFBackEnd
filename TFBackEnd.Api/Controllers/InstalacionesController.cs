@@ -32,6 +32,7 @@ namespace TFBackEnd.Api.Controllers
 
             try
             {
+                /*Esta consulta usa un view model para poder traer la informacion que necesito*/
                 //lstInstall =await (from i in _context.Instalaciones
                 //              join o in _context.Operarios on i.Operario.Id equals o.Id
                 //              join a in _context.Apps on i.App.Id equals a.Id
@@ -43,6 +44,8 @@ namespace TFBackEnd.Api.Controllers
                 //                  Operario=o.Nombre,
                 //                  App=a.Nombre
                 //              }).ToListAsync();
+
+                /*Esta consulta es un poco mas rapida para traer la informacion */
 
                 lstInstall = await _context.Instalaciones
                    .Include(i => i.Operario)
@@ -108,18 +111,24 @@ namespace TFBackEnd.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutInstalaciones(int id, Instalacion instalaciones)
         {
+            Respuesta oRespuesta = new Respuesta();
+
             if (id != instalaciones.Id)
             {
                 return BadRequest();
             }
 
+            instalaciones.Fecha = DateTime.Now;
             _context.Entry(instalaciones).State = EntityState.Modified;
+
+            oRespuesta.Paso = 1;
+            oRespuesta.Data = instalaciones;
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!InstalacionesExists(id))
                 {
@@ -127,8 +136,10 @@ namespace TFBackEnd.Api.Controllers
                 }
                 else
                 {
-                    throw;
+                    oRespuesta.Mensaje = ex.Message;
                 }
+
+                return Ok(oRespuesta);
             }
 
             return NoContent();
@@ -139,8 +150,27 @@ namespace TFBackEnd.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Instalacion>> PostInstalaciones(Instalacion instalaciones)
         {
-            _context.Instalaciones.Add(instalaciones);
-            await _context.SaveChangesAsync();
+            Respuesta oRespuesta = new Respuesta();
+
+            if (ModelState.IsValid)
+            {
+                instalaciones.Fecha = DateTime.Now;
+
+                _context.Instalaciones.Add(instalaciones);
+                oRespuesta.Paso = 1;
+                oRespuesta.Data = instalaciones;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+
+                    oRespuesta.Mensaje = ex.Message;
+
+                }
+                return Ok(oRespuesta);
+            }
 
             return CreatedAtAction("GetInstalaciones", new { id = instalaciones.Id }, instalaciones);
         }
@@ -149,14 +179,28 @@ namespace TFBackEnd.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInstalaciones(int id)
         {
+            Respuesta oRespuesta = new Respuesta();
+
             var instalaciones = await _context.Instalaciones.FindAsync(id);
             if (instalaciones == null)
             {
                 return NotFound();
             }
 
-            _context.Instalaciones.Remove(instalaciones);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Instalaciones.Remove(instalaciones);
+                oRespuesta.Paso = 1;
+                oRespuesta.Data = instalaciones;
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                oRespuesta.Mensaje = ex.Message;
+            }
+
 
             return NoContent();
         }

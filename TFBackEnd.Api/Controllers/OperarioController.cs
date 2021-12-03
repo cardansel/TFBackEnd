@@ -65,7 +65,32 @@ namespace TFBackEnd.Api.Controllers
         }
         #endregion
 
+        #region Save
+        [HttpPost]
+        public async Task<ActionResult<Operario>>PostOperario(Operario operario)
+        {
+            Respuesta oRespuesta = new Respuesta();
 
+            try
+            {
+                _context.Add(operario);
+
+                oRespuesta.Paso = 1;
+                oRespuesta.Data = operario;
+
+                await _context.SaveChangesAsync();
+
+
+            }
+            catch (Exception ex)
+            {
+
+                oRespuesta.Mensaje = ex.Message;
+            }
+
+            return Ok(oRespuesta);
+        }
+        #endregion
 
     }
 }
