@@ -65,22 +65,148 @@ namespace TFBackEnd.Api.Controllers
         }
         #endregion
 
-        #region Save
-        [HttpPost]
-        public async Task<ActionResult<Operario>>PostOperario(Operario operario)
+        #region GetById
+        /// <summary>
+        /// Muestra la informacion de 
+        /// un registro por su Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Operario>> GetById(int? id)
         {
-            Respuesta oRespuesta = new Respuesta();
+
 
             try
             {
-                _context.Add(operario);
+                if (id == null)
+                {
+                    return NotFound();
 
+                }
+
+                var operario = await _context.Operarios.FindAsync(id);
+
+                if (operario == null)
+                {
+                    return NotFound();
+                }
+
+                return operario;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        #endregion
+
+        #region Save
+        /// <summary>
+        /// Crea un nuevo registro 
+        /// </summary>
+        /// <param name="operario"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<Operario>> PostOperario(Operario operario)
+        {
+            Respuesta oRespuesta = new Respuesta();
+
+            if (ModelState.IsValid)
+            {
+                _context.Operarios.Add(operario);
+                oRespuesta.Paso = 1;
+                oRespuesta.Data = operario;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+
+                    oRespuesta.Mensaje = ex.Message;
+
+                }
+                return Ok(oRespuesta);
+            }
+
+            return CreatedAtAction("GetAll", new { id = operario.Id }, operario);
+        }
+        #endregion
+
+        #region Edit
+        /// <summary>
+        /// Metodo para editar y actualizar 
+        /// un registro
+        /// </summary>
+        /// <param name="operario"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutOperario(int id, Operario operario)
+        {
+            Respuesta oRespuesta = new Respuesta();
+
+            if (id != operario.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(operario).State = EntityState.Modified;
+
+            oRespuesta.Paso = 1;
+            oRespuesta.Data = operario;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                if (!OperariosExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    oRespuesta.Mensaje = ex.Message;
+                }
+
+                return Ok(oRespuesta);
+            }
+
+            //return NoContent();
+            return CreatedAtAction("GetAll", new { id = operario.Id }, operario);
+        }
+
+        #endregion
+
+        #region Delete
+        /// <summary>
+        /// Metodo para eliminar un registro
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            Respuesta oRespuesta = new Respuesta();
+
+            var operario = await _context.Operarios.FindAsync(id);
+            if (operario == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                _context.Operarios.Remove(operario);
                 oRespuesta.Paso = 1;
                 oRespuesta.Data = operario;
 
                 await _context.SaveChangesAsync();
-
-
             }
             catch (Exception ex)
             {
@@ -88,9 +214,23 @@ namespace TFBackEnd.Api.Controllers
                 oRespuesta.Mensaje = ex.Message;
             }
 
-            return Ok(oRespuesta);
+
+            return NoContent();
         }
         #endregion
 
+        #region Existe
+        /// <summary>
+        /// Metodo que verifica
+        /// si existe un registro con el
+        /// Id asignado
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private bool OperariosExists(int id)
+        {
+            return _context.Operarios.Any(e => e.Id == id);
+        }
+        #endregion
     }
 }

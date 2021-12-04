@@ -145,6 +145,26 @@ namespace TFBackEnd.Api.Controllers
             return NoContent();
         }
 
+        [HttpGet("{id}")]
+        public dynamic telInstall(int id)
+        {
+            var tel = _context.Telefonos.Find(id);
+
+            return _context.Telefonos
+                .Where(item => item.Id == id)
+                .Select(item => new
+                {
+                    Marca = item.Marca,
+                    Modelo = item.Modelo,
+                    lstAppIntall = item.Instalaciones.Select(app => new
+                    {
+                        Aplicacion = app.App.Nombre,
+                        Operario_Nombre = app.Operario.Nombre,
+                        Operario_Apellido = app.Operario.Apellido
+                    }).ToList()
+                }).ToList();
+        }
+
         // POST: api/Instalaciones
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

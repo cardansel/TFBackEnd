@@ -41,10 +41,10 @@ namespace TFBackEnd.Api
                              }
                       );
             });
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "TFBackEnd.Api", Version = "v1" });
-            //});
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TFBackEnd.Api", Version = "v1" });
+            });
 
             services.AddDbContext<TFBackEndApiContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("TFBackEndApiContext")));
@@ -56,8 +56,8 @@ namespace TFBackEnd.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseSwagger();
-                //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TFBackEnd.Api v1"));
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TFBackEnd.Api v1"));
             }
 
             app.UseHttpsRedirection();
