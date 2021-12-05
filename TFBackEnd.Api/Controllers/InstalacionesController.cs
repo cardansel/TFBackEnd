@@ -23,6 +23,13 @@ namespace TFBackEnd.Api.Controllers
             _context = context;
         }
 
+        #region GetAll
+        /// <summary>
+        /// Metodo que devuelve
+        /// el listado de las Instalaciones
+        /// </summary>
+        /// <returns></returns>
+
         // GET: api/Instalaciones
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Instalacion>>> GetInstalaciones()
@@ -91,8 +98,10 @@ namespace TFBackEnd.Api.Controllers
 
             //  return lstInstall;
         }
+        #endregion
 
-        // GET: api/Instalaciones/5
+        #region GetById
+// GET: api/Instalaciones/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Instalacion>> GetInstalaciones(int id)
         {
@@ -105,6 +114,9 @@ namespace TFBackEnd.Api.Controllers
 
             return instalaciones;
         }
+        #endregion
+
+        
 
         // PUT: api/Instalaciones/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -144,6 +156,7 @@ namespace TFBackEnd.Api.Controllers
 
             return NoContent();
         }
+
 
         [HttpGet("{id}")]
         public dynamic telInstall(int id)

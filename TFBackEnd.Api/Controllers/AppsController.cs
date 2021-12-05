@@ -24,6 +24,12 @@ namespace TFBackEnd.Api.Controllers
         }
 
         // GET: api/Apps
+        #region GetAll
+        /// <summary>
+        /// Metodo que devuelve 
+        /// un listado de las App 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<App>>> GetApps()
         {
@@ -48,21 +54,53 @@ namespace TFBackEnd.Api.Controllers
             return Ok(oRespuesta);
 
         }
+        #endregion
 
+
+        #region GetById
         // GET: api/Apps/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<App>> GetApp(int id)
+        public async Task<ActionResult<App>> GetApp(int? id)
         {
-            var app = await _context.Apps.FindAsync(id);
+            Respuesta oRespuesta = new Respuesta();
 
-            if (app == null)
+            try
             {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+                var app = await _context.Apps.FindAsync(id);
+                oRespuesta.Paso = 1;
+                oRespuesta.Data = app;
+                if (app == null)
+                {
+                    return NotFound();
+                }
+
+                return app;
+            }
+            catch (Exception ex)
+            {
+
+                oRespuesta.Mensaje = ex.Message;
             }
 
-            return app;
-        }
 
+            return Ok(oRespuesta);
+
+        }
+        #endregion
+
+
+        #region Update
+        /// <summary>
+        /// Metodo para actualizar un registro
+        /// a traves de su Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="app"></param>
+        /// <returns></returns>
         // PUT: api/Apps/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -81,7 +119,7 @@ namespace TFBackEnd.Api.Controllers
             try
             {
                 oRespuesta.Paso = 1;
-               oRespuesta.Data = app;
+                oRespuesta.Data = app;
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -98,7 +136,16 @@ namespace TFBackEnd.Api.Controllers
 
             return NoContent();
         }
+        #endregion
 
+
+        #region Create
+        /// <summary>
+        /// Meto que permite agregar 
+        /// un nuevo registro
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
         // POST: api/Apps
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -119,26 +166,57 @@ namespace TFBackEnd.Api.Controllers
             }
             catch (Exception ex)
             {
-                 oRespuesta.Mensaje = ex.Message;
+                oRespuesta.Mensaje = ex.Message;
             }
             return CreatedAtAction("GetApp", new { id = app.Id }, app);
         }
+        #endregion
 
+        #region Delete
+        /// <summary>
+        /// Metodo que permite eliminar 
+        /// un registro a trves de su Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE: api/Apps/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteApp(int id)
+        public async Task<IActionResult> DeleteApp(int? id)
         {
-            var app = await _context.Apps.FindAsync(id);
-            if (app == null)
+            Respuesta oRespuesta = new Respuesta();
+
+            try
             {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var app = await _context.Apps.FindAsync(id);
+                oRespuesta.Paso = 1;
+                oRespuesta.Data = app;
+
+                if (app == null)
+                {
+                    return NotFound();
+                }
+                _context.Apps.Remove(app);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetApp", new { id = app.Id }, app);
+            }
+            catch (Exception ex)
+            {
+
+                oRespuesta.Mensaje = ex.Message;
             }
 
-            _context.Apps.Remove(app);
-            await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(oRespuesta);
         }
+
+        #endregion
+
+
 
         private bool AppExists(int id)
         {
