@@ -11,8 +11,13 @@ namespace TFBackEnd.Api.Models
         public bool Exitosa { get; set; }
         public DateTime Fecha { get; set; }
 
+        public int OperarioId { get; set; }
         public virtual Operario Operario { get; set; }
+
+        public int AppId { get; set; }
         public virtual App App { get; set; }
+
+        public int TelefonoId { get; set; }
         public virtual Telefono Telefono { get; set; }
     }
 }

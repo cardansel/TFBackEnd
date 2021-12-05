@@ -15,6 +15,11 @@ namespace TFBackEnd.Api.Data
         {
         }
 
+        protected  override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+         
+        }
+
         public DbSet<Telefono> Telefonos { get; set; }
 
         public DbSet<App> Apps { get; set; }
