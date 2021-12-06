@@ -113,20 +113,22 @@ namespace TFBackEnd.Api.Controllers
 
                 //Avisamos que hemos modificado el sensor para que EF tome los cambios
                 //al guardar
-                _context.Entry(oSensor).State = EntityState.Detached;
+               // _context.Entry(oSensor).State = EntityState.Detached;
 
                 _context.Entry(sensor).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-
+               // return Ok(sensor);
                 // Si llegamos aquí es porque todo salió bien
                 // devolvemos OK (http 200) y los datos de los sensores
-                return Ok(sensor);
+
+                return CreatedAtAction("GetSensor", new { id = sensor.Id }, sensor);
             }
             catch (Exception ex)
             {
 
                 throw new Exception(ex.ToString());
             }
+            
         }
 
         // DELETE api/<SensoresController>/5

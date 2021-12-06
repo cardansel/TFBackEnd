@@ -108,11 +108,12 @@ namespace TFBackEnd.Api.Controllers
                         if (sensor != null)
                         {
                             telefono.Sensores.Add(sensor);
+                            //_context.Entry(telefono.Sensores).State = EntityState.Modified;
                         }
-                        else
-                        {
-                            telefono.Sensores.Add(sensor);
-                        }
+                        //else
+                        //{
+                        //    telefono.Sensores.Add(sensor);
+                        //}
                     }
                 }
                 //Avisamos que hemos modificado el sensor para que EF tome los cambios
