@@ -59,11 +59,11 @@ namespace TFBackEnd.Api.Controllers
                                    item.Modelo
                                })
                            })
+                        
                    }).ToListAsync();
             }
             catch (Exception ex)
             {
-
                 throw new Exception(ex.ToString());
             }
         }
