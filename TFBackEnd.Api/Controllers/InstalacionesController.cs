@@ -25,8 +25,24 @@ namespace TFBackEnd.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Instalacion>>> GetInstalaciones()
         {
-            return await _context.Instalaciones.ToListAsync();
+            try
+            {
+                return await _context.Instalaciones
+                            .Include(item=>item.Operario)
+                            .Include(item=>item.App)
+                            .Include(item=>item.Telefono)
+                            .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+            
         }
+
+
+
 
         // GET: api/Instalaciones/5
         [HttpGet("{id}")]
@@ -73,7 +89,7 @@ namespace TFBackEnd.Api.Controllers
                     return NotFound();
                 }
                 else
-                {
+                { 
                     throw;
                 }
             }

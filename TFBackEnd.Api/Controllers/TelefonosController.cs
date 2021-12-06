@@ -40,6 +40,34 @@ namespace TFBackEnd.Api.Controllers
             }
         }
 
+        [HttpGet("search")]
+        public async Task<dynamic> Search(string sen, string apli)
+        {
+            try
+            {
+                return await _context.Instalaciones.Where(item => item.App.Nombre == apli)
+                   .Select(item => new
+                   {
+                       App = item.App.Nombre,
+                       Sensor = item.Telefono.Sensores.Where(item => item.Nombre == sen)
+                           .Select(item => new
+                           {
+                               item.Nombre,
+                               Telefono = item.Telefonos.Select(item => new
+                               {
+                                   item.Marca,
+                                   item.Modelo
+                               })
+                           })
+                   }).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
         // GET api/<TelefonosController>/5
         [HttpGet("{id}")]
         public string Get(int id)
