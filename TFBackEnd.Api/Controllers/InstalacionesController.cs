@@ -23,12 +23,37 @@ namespace TFBackEnd.Api.Controllers
 
         // GET: api/Instalaciones
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Instalaciones>>> GetInstalaciones()
+        public async Task<ActionResult<IEnumerable<Instalacion>>> GetInstalaciones()
         {
-
             try
             {
-                return await _context.Instalaciones.ToListAsync();
+                var instalacion =await _context.Instalaciones
+                              .Include(i => i.Operario)
+                              .Include(i => i.App)
+                              .Include(i => i.Telefono)
+                              .Select(i => new Instalacion()
+                              {
+                                  Id = i.Id,
+                                  Exitosa = i.Exitosa,
+                                  Fecha = i.Fecha,
+                                  Operario = new Operario()
+                                  {
+                                      Nombre = i.Operario.Nombre,
+                                      Apellido = i.Operario.Apellido
+                                  },
+                                  App = new App()
+                                  {
+                                      Nombre = i.App.Nombre
+                                  },
+                                  Telefono = new Telefono()
+                                  {
+                                      Marca = i.Telefono.Marca,
+                                      Modelo = i.Telefono.Modelo,
+                                      Precio = i.Telefono.Precio
+                                  }
+                              }).ToListAsync();
+
+                return instalacion;
             }
             catch (Exception ex)
             {
@@ -36,47 +61,57 @@ namespace TFBackEnd.Api.Controllers
                 throw new Exception(ex.ToString());
             }
             
-            
         }
+
+
+
 
         // GET: api/Instalaciones/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Instalaciones>> GetInstalaciones(int id)
+        public async Task<ActionResult<Instalacion>> GetInstalacion(int id)
         {
-            var instalaciones = await _context.Instalaciones.FindAsync(id);
+            var instalacion = await _context.Instalaciones.FindAsync(id);
 
-            if (instalaciones == null)
+            if (instalacion == null)
             {
                 return NotFound();
             }
 
-            return instalaciones;
+            return instalacion;
         }
 
         // PUT: api/Instalaciones/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutInstalaciones(int id, Instalaciones instalaciones)
+        public async Task<IActionResult> PutInstalacion(int id, Instalacion instalacion)
         {
-            if (id != instalaciones.Id)
+
+           
+            if (id != instalacion.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(instalaciones).State = EntityState.Modified;
+            instalacion.Fecha = DateTime.Now;
+            _context.Entry(instalacion).State = EntityState.Modified;
 
+            if (instalacion==null)
+            {
+                return NotFound();
+            }
+            
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!InstalacionesExists(id))
+                if (!InstalacionExists(id))
                 {
                     return NotFound();
                 }
                 else
-                {
+                { 
                     throw;
                 }
             }
@@ -87,31 +122,46 @@ namespace TFBackEnd.Api.Controllers
         // POST: api/Instalaciones
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Instalaciones>> PostInstalaciones(Instalaciones instalaciones)
+        public async Task<ActionResult<Instalacion>> PostInstalacion(Instalacion instalacion)
         {
-            _context.Instalaciones.Add(instalaciones);
-            await _context.SaveChangesAsync();
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    instalacion.Fecha = DateTime.Now;
+                    _context.Instalaciones.Add(instalacion);
+                    await _context.SaveChangesAsync();
+                }
 
-            return CreatedAtAction("GetInstalaciones", new { id = instalaciones.Id }, instalaciones);
+                return instalacion;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+
+
+            return CreatedAtAction("GetInstalacion", new { id = instalacion.Id }, instalacion);
         }
 
         // DELETE: api/Instalaciones/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInstalaciones(int id)
+        public async Task<IActionResult> DeleteInstalacion(int id)
         {
-            var instalaciones = await _context.Instalaciones.FindAsync(id);
-            if (instalaciones == null)
+            var instalacion = await _context.Instalaciones.FindAsync(id);
+            if (instalacion == null)
             {
                 return NotFound();
             }
 
-            _context.Instalaciones.Remove(instalaciones);
+            _context.Instalaciones.Remove(instalacion);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool InstalacionesExists(int id)
+        private bool InstalacionExists(int id)
         {
             return _context.Instalaciones.Any(e => e.Id == id);
         }

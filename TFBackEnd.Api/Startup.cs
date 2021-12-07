@@ -13,11 +13,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TFBackEnd.Api.Data;
+using System.Text.Json.Serialization;
 
 namespace TFBackEnd.Api
 {
     public class Startup
     {
+        readonly string MiCors = "MiCors";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,13 +32,26 @@ namespace TFBackEnd.Api
         {
 
             services.AddControllers();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MiCors,
+                             builder =>
+                             {
+                                 builder.WithOrigins("*");
+                             }
+                      );
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TFBackEnd.Api", Version = "v1" });
             });
+            services.AddControllers().AddJsonOptions(x =>
+                    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
             services.AddDbContext<TFBackEndApiContext>(options =>
-                    options.UseMySQL(Configuration.GetConnectionString("TFBackEndApiContext")));
+                   // options.UseSqlServer(Configuration.GetConnectionString("TFBackEndApiContext")));
+                     options.UseMySQL(Configuration.GetConnectionString("TFBackEndApiContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,7 +67,7 @@ namespace TFBackEnd.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors(MiCors);
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

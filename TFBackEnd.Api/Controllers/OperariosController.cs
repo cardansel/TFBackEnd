@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TFBackEnd.Api.Data;
 using TFBackEnd.Api.Models;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TFBackEnd.Api.Controllers
 {
@@ -21,38 +22,106 @@ namespace TFBackEnd.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Operarios
+
+        // GET: api/<OperariosController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Operarios>>> GetOperarios()
+        public async Task<ActionResult<IEnumerable<Operario>>> GetOperarios()
         {
-            return await _context.Operarios.ToListAsync();
+            try
+            {
+                return await _context.Operarios.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
         }
 
-        // GET: api/Operarios/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Operarios>> GetOperarios(int id)
+        [HttpGet("InstallDate")]
+        public async Task<dynamic> installDate(DateTime date)
         {
-            var operarios = await _context.Operarios.FindAsync(id);
+            date = date.Date;
 
-            if (operarios == null)
+            try
             {
-                return NotFound();
+                return await _context.Operarios
+                        .Select(item => new
+                        {
+                            item.Nombre,
+                            item.Apellido,
+                            apliInstall = _context.Instalaciones
+                                .Where(i => i.Fecha.Date == date &&
+                                        i.Exitosa == true &&
+                                        i.Operario.Id == item.Id)
+                                .Count()
+                        }).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        // GET api/<OperariosController>/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Operario>> GetByIdOperario(int? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return BadRequest();
+                }
+
+                var operario = await _context.Operarios.FindAsync(id);
+
+                if (operario == null)
+                {
+                    return NotFound();
+                }
+
+                return operario;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
             }
 
-            return operarios;
+
         }
 
-        // PUT: api/Operarios/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOperarios(int id, Operarios operarios)
+        // POST api/<OperariosController>
+        [HttpPost]
+        public async Task<ActionResult<Operario>> PostOperario(Operario operario)
         {
-            if (id != operarios.id)
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _context.Operarios.Add(operario);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+            return CreatedAtAction("GetOperarios", new { id = operario.Id }, operario);
+        }
+
+        // PUT api/<OperariosController>/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutOperario(int id,Operario operario)
+        {
+            if (id != operario.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(operarios).State = EntityState.Modified;
+            _context.Entry(operario).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +129,7 @@ namespace TFBackEnd.Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!OperariosExists(id))
+                if (!OperarioExists(id))
                 {
                     return NotFound();
                 }
@@ -70,39 +139,28 @@ namespace TFBackEnd.Api.Controllers
                 }
             }
 
-            return NoContent();
+            return CreatedAtAction("GetOperarios",new { id=operario.Id},operario);
         }
 
-        // POST: api/Operarios
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Operarios>> PostOperarios(Operarios operarios)
-        {
-            _context.Operarios.Add(operarios);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetOperarios", new { id = operarios.id }, operarios);
-        }
-
-        // DELETE: api/Operarios/5
+        // DELETE api/<OperariosController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOperarios(int id)
+        public async Task<IActionResult> DeleteOperario(int id)
         {
-            var operarios = await _context.Operarios.FindAsync(id);
-            if (operarios == null)
+            var operario = await _context.Operarios.FindAsync(id);
+            if (operario == null)
             {
                 return NotFound();
             }
 
-            _context.Operarios.Remove(operarios);
+            _context.Operarios.Remove(operario);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return CreatedAtAction("GetOperarios",new { id=operario.Id},operario);
         }
 
-        private bool OperariosExists(int id)
+        private bool OperarioExists(int id)
         {
-            return _context.Operarios.Any(e => e.id == id);
+            return _context.Operarios.Any(e => e.Id == id);
         }
     }
 }
