@@ -14,10 +14,10 @@ namespace TFBackEnd.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    
+
     public class TelefonosController : ControllerBase
     {
-     private readonly TFBackEndApiContext _context;
+        private readonly TFBackEndApiContext _context;
 
         public TelefonosController(TFBackEndApiContext context)
         {
@@ -59,7 +59,7 @@ namespace TFBackEnd.Api.Controllers
                                    item.Modelo
                                })
                            })
-                        
+
                    }).ToListAsync();
             }
             catch (Exception ex)
@@ -84,19 +84,21 @@ namespace TFBackEnd.Api.Controllers
                 //Cada Sensor recibe un telefono
                 foreach (var item in telefono.SensoresList)
                 {
-                    Sensor s =await _context.Sensor.FindAsync(item);
+                    Sensor s = await _context.Sensor.FindAsync(item);
                     telefono.Sensores.Add(s);
                 }
                 _context.Telefonos.Add(telefono);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetTelefonos", new { id = telefono.Id }, telefono);
+                
             }
             catch (Exception ex)
             {
 
                 throw new Exception(ex.ToString());
             }
+            
+            return CreatedAtAction("GetTelefonos", new { id = telefono.Id }, telefono);
         }
 
         // PUT api/<TelefonosController>/5
@@ -105,7 +107,7 @@ namespace TFBackEnd.Api.Controllers
         {
             try
             {
-                if (id!=telefono.Id)
+                if (id != telefono.Id)
                 {
                     return BadRequest();
                 }
@@ -151,13 +153,15 @@ namespace TFBackEnd.Api.Controllers
 
                 // Si llegamos aquí es porque todo salió bien
                 // devolvemos OK (http 200) y los datos de los sensores
-                return Ok(telefono);
+               // return Ok(telefono);
             }
             catch (Exception ex)
             {
 
                 throw new Exception(ex.ToString());
             }
+
+            return CreatedAtAction("GetTelefonos", new { id = telefono.Id }, telefono);
         }
 
         // DELETE api/<TelefonosController>/5

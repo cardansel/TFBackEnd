@@ -29,6 +29,9 @@ namespace TFBackEnd.Api.Data
         public DbSet<Operario> Operarios { get; set; }
 
         public DbSet<Sensor> Sensor { get; set; }
+
+
+        
  
     }
 }

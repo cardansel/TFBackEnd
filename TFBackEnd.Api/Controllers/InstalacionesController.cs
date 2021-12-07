@@ -27,11 +27,33 @@ namespace TFBackEnd.Api.Controllers
         {
             try
             {
-                return await _context.Instalaciones
-                            .Include(item=>item.Operario)
-                            .Include(item=>item.App)
-                            .Include(item=>item.Telefono)
-                            .ToListAsync();
+                var instalacion =await _context.Instalaciones
+                              .Include(i => i.Operario)
+                              .Include(i => i.App)
+                              .Include(i => i.Telefono)
+                              .Select(i => new Instalacion()
+                              {
+                                  Id = i.Id,
+                                  Exitosa = i.Exitosa,
+                                  Fecha = i.Fecha,
+                                  Operario = new Operario()
+                                  {
+                                      Nombre = i.Operario.Nombre,
+                                      Apellido = i.Operario.Apellido
+                                  },
+                                  App = new App()
+                                  {
+                                      Nombre = i.App.Nombre
+                                  },
+                                  Telefono = new Telefono()
+                                  {
+                                      Marca = i.Telefono.Marca,
+                                      Modelo = i.Telefono.Modelo,
+                                      Precio = i.Telefono.Precio
+                                  }
+                              }).ToListAsync();
+
+                return instalacion;
             }
             catch (Exception ex)
             {

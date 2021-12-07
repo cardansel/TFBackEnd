@@ -25,7 +25,15 @@ namespace TFBackEnd.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<App>>> GetApps()
         {
-            return await _context.Apps.ToListAsync();
+            try
+            {
+                return await _context.Apps.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
         }
 
         // GET: api/Apps/5
