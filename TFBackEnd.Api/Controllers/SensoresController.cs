@@ -28,6 +28,7 @@ namespace TFBackEnd.Api.Controllers
         {
             try
             {
+              
                 return await _context.Sensor.ToListAsync();
             }
             catch (Exception ex)
