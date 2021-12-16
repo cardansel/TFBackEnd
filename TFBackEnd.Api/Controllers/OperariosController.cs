@@ -22,6 +22,7 @@ namespace TFBackEnd.Api.Controllers
             _context = context;
         }
 
+        //cuantas app instalaron por dia por rango de fecha y operario
 
         // GET: api/<OperariosController>
         [HttpGet]

@@ -50,6 +50,34 @@ namespace TFBackEnd.Api.Controllers
             return app;
         }
 
+        [HttpGet("search")]
+        public async Task<dynamic> Search(string install)
+        {
+            try
+            {
+                return await _context.Apps.Where(item => item.Instalaciones.Nombre == apli)
+                   .Select(item => new
+                   {
+                       App = item.App.Nombre,
+                       Sensor = item.Telefono.Sensores.Where(item => item.Nombre == sen)
+                           .Select(item => new
+                           {
+                               item.Nombre,
+                               Telefono = item.Telefonos.Select(item => new
+                               {
+                                   item.Marca,
+                                   item.Modelo
+                               })
+                           })
+
+                   }).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
         // PUT: api/Apps/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

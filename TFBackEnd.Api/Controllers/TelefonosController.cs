@@ -40,6 +40,8 @@ namespace TFBackEnd.Api.Controllers
             }
         }
 
+        //info app y operario
+
         [HttpGet("search")]
         public async Task<dynamic> Search(string sen, string apli)
         {
