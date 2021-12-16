@@ -18,6 +18,7 @@ namespace TFBackEnd.Api
 {
     public class Startup
     {
+        readonly string MiCors = "MiCors";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,6 +31,16 @@ namespace TFBackEnd.Api
         {
 
             services.AddControllers();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MiCors,
+                             builder =>
+                             {
+                                 builder.WithOrigins("*");
+                             }
+                      );
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TFBackEnd.Api", Version = "v1" });
@@ -52,7 +63,7 @@ namespace TFBackEnd.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors(MiCors);
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

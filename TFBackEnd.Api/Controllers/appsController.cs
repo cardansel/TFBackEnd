@@ -12,47 +12,47 @@ namespace TFBackEnd.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class appsController : ControllerBase
+    public class AppsController : ControllerBase
     {
         private readonly TFBackEndApiContext _context;
 
-        public appsController(TFBackEndApiContext context)
+        public AppsController(TFBackEndApiContext context)
         {
             _context = context;
         }
 
-        // GET: api/apps
+        // GET: api/Apps
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<apps>>> Getapps()
+        public async Task<ActionResult<IEnumerable<App>>> GetApps()
         {
-            return await _context.apps.ToListAsync();
+            return await _context.Apps.ToListAsync();
         }
 
-        // GET: api/apps/5
+        // GET: api/Apps/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<apps>> Getapps(int id)
+        public async Task<ActionResult<App>> GetApp(int id)
         {
-            var apps = await _context.apps.FindAsync(id);
+            var app = await _context.Apps.FindAsync(id);
 
-            if (apps == null)
+            if (app == null)
             {
                 return NotFound();
             }
 
-            return apps;
+            return app;
         }
 
-        // PUT: api/apps/5
+        // PUT: api/Apps/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> Putapps(int id, apps apps)
+        public async Task<IActionResult> PutApp(int id, App app)
         {
-            if (id != apps.id)
+            if (id != app.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(apps).State = EntityState.Modified;
+            _context.Entry(app).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace TFBackEnd.Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!appsExists(id))
+                if (!AppExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace TFBackEnd.Api.Controllers
             return NoContent();
         }
 
-        // POST: api/apps
+        // POST: api/Apps
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<apps>> Postapps(apps apps)
+        public async Task<ActionResult<App>> PostApp(App app)
         {
-            _context.apps.Add(apps);
+            _context.Apps.Add(app);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Getapps", new { id = apps.id }, apps);
+            return CreatedAtAction("GetApp", new { id = app.Id }, app);
         }
 
-        // DELETE: api/apps/5
+        // DELETE: api/Apps/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Deleteapps(int id)
+        public async Task<IActionResult> DeleteApp(int id)
         {
-            var apps = await _context.apps.FindAsync(id);
-            if (apps == null)
+            var app = await _context.Apps.FindAsync(id);
+            if (app == null)
             {
                 return NotFound();
             }
 
-            _context.apps.Remove(apps);
+            _context.Apps.Remove(app);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool appsExists(int id)
+        private bool AppExists(int id)
         {
-            return _context.apps.Any(e => e.id == id);
+            return _context.Apps.Any(e => e.Id == id);
         }
     }
 }

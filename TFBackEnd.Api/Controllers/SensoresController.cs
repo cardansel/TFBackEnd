@@ -13,25 +13,22 @@ namespace TFBackEnd.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
-    
-    public class TelefonosController : ControllerBase
+    public class SensoresController : ControllerBase
     {
-     private readonly TFBackEndApiContext _context;
+        private readonly TFBackEndApiContext _context;
 
-        public TelefonosController(TFBackEndApiContext context)
+        public SensoresController(TFBackEndApiContext context)
         {
             _context = context;
         }
 
-
-        // GET: api/<TelefonosController>
+        // GET: api/<SensoresController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Telefono>>> GetTelefonos()
+        public async Task<ActionResult<IEnumerable<Sensor>>> GetSensor()
         {
             try
             {
-                return await _context.Telefonos.ToListAsync();
+                return await _context.Sensor.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -40,57 +37,59 @@ namespace TFBackEnd.Api.Controllers
             }
         }
 
-        // GET api/<TelefonosController>/5
+        // GET api/<SensoresController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<TelefonosController>
+        // POST api/<SensoresController>
         [HttpPost]
-        public async Task<ActionResult<Telefono>> PostTelefono(Telefono telefono)
+        public async Task<ActionResult<Sensor>> PostSensor(Sensor sensor)
         {
             try
             {
-                //Cada Sensor recibe un telefono
-                foreach (var item in telefono.SensoresList)
+                //Cada Telefono recibido le agrego un sensor
+                foreach (var item in sensor.TelefonosList)
                 {
-                    Sensor s =await _context.Sensor.FindAsync(item);
-                    telefono.Sensores.Add(s);
+                    Telefono t = await _context.Telefonos.FindAsync(item);
+                    sensor.Telefonos.Add(t);
                 }
-                _context.Telefonos.Add(telefono);
+                _context.Sensor.Add(sensor);
                 await _context.SaveChangesAsync();
-
-                return CreatedAtAction("GetTelefonos", new { id = telefono.Id }, telefono);
             }
             catch (Exception ex)
             {
 
                 throw new Exception(ex.ToString());
             }
+
+
+            //evolvemos el Created con el sensor creado
+            return CreatedAtAction("GetSensor", new { id = sensor.Id }, sensor);
         }
 
-        // PUT api/<TelefonosController>/5
+        // PUT api/<SensoresController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutTelefono(int id, Telefono telefono)
+        public async Task<ActionResult> PutSensor(int id, Sensor sensor)
         {
             try
             {
-                if (id!=telefono.Id)
+                if (id != sensor.Id)
                 {
                     return BadRequest();
                 }
 
-                // La variable telefono tendrá la información que recibimos por PUT
-                // La variable tel tendrá la info original de los tlefonos con el id recibido
+                // La variable sensor tendrá la información que recibimos por PUT
+                // La variable oSensor tendrá la info original de los sensores con el id recibido
 
-                var tel = await _context.Telefonos.FindAsync(id);
+                var oSensor = await _context.Sensor.FindAsync(id);
 
                 // Borraremos los telefonos del sensor para reemplazarlos con los recibidos
-                if (tel.Sensores != null)
+                if (oSensor.Telefonos != null)
                 {
-                    tel.Sensores.Clear();
+                    oSensor.Telefonos.Clear();
                 }
 
                 await _context.SaveChangesAsync();
@@ -100,39 +99,39 @@ namespace TFBackEnd.Api.Controllers
                 _context.ChangeTracker.Clear();
 
                 //Agregamos a la info de sensores los nuvos telefonos
-                if (tel.SensoresList != null)
+                if (sensor.TelefonosList != null)
                 {
-                    foreach (var Idsensor in tel.SensoresList)
+                    foreach (var telId in sensor.TelefonosList)
                     {
-                        var sensor = await _context.Sensor.FindAsync(Idsensor);
-                        if (sensor != null)
+                        var telefono = await _context.Telefonos.FindAsync(telId);
+                        if (telefono != null)
                         {
-                            telefono.Sensores.Add(sensor);
-                            //_context.Entry(telefono.Sensores).State = EntityState.Modified;
+                            sensor.Telefonos.Add(telefono);
                         }
-                        //else
-                        //{
-                        //    telefono.Sensores.Add(sensor);
-                        //}
                     }
                 }
+
                 //Avisamos que hemos modificado el sensor para que EF tome los cambios
                 //al guardar
-                _context.Entry(telefono).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
+               // _context.Entry(oSensor).State = EntityState.Detached;
 
+                _context.Entry(sensor).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+               // return Ok(sensor);
                 // Si llegamos aquí es porque todo salió bien
                 // devolvemos OK (http 200) y los datos de los sensores
-                return Ok(telefono);
+
+                return CreatedAtAction("GetSensor", new { id = sensor.Id }, sensor);
             }
             catch (Exception ex)
             {
 
                 throw new Exception(ex.ToString());
             }
+            
         }
 
-        // DELETE api/<TelefonosController>/5
+        // DELETE api/<SensoresController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
