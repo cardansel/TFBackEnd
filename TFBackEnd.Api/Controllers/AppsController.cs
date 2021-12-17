@@ -55,18 +55,22 @@ namespace TFBackEnd.Api.Controllers
         {
             try
             {
-                return await _context.Apps.Where(item => item.Instalaciones.Nombre == apli)
+                return await _context.Instalaciones.Where(item => item.App.Nombre == install)
                    .Select(item => new
                    {
-                       App = item.App.Nombre,
-                       Sensor = item.Telefono.Sensores.Where(item => item.Nombre == sen)
+                       Instalacion = item.App,
+                       apli = item.App.Instalaciones.Where(item => item.App.Nombre == install)
                            .Select(item => new
                            {
-                               item.Nombre,
-                               Telefono = item.Telefonos.Select(item => new
+                               item.App.Nombre,
+                               Instalacion = item.App.Instalaciones.Select(item => new
                                {
-                                   item.Marca,
-                                   item.Modelo
+                                   item.Exitosa,
+                                   item.Fecha,
+                                   item.Operario.Apellido,
+                                   item.App.Nombre,
+                                   item.Telefono.Marca,
+                                   item.Telefono.Modelo
                                })
                            })
 
