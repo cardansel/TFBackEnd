@@ -137,7 +137,9 @@ namespace TFBackEnd.Api.Controllers
             _context.Apps.Remove(app);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            //return NoContent();
+            return CreatedAtAction("GetApps", new { id = app.Id }, app);
+
         }
 
         private bool AppExists(int id)
