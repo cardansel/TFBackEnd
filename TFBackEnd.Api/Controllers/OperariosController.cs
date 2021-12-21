@@ -40,7 +40,7 @@ namespace TFBackEnd.Api.Controllers
         }
 
         [HttpGet("InstallDate")]
-        public async Task<dynamic> installDate(DateTime date)
+        public async Task<dynamic> InstallDate(DateTime date)
         {
             date = date.Date;
 

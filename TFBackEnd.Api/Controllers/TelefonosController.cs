@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TFBackEnd.Api.Data;
 using TFBackEnd.Api.Models;
+using TFBackEnd.Api.Models.ViewModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -42,6 +43,58 @@ namespace TFBackEnd.Api.Controllers
 
         //info app y operario
 
+        #region Info App Operario
+        /// <summary>
+        /// Este metodo recibe un string
+        /// puede ser el nombre de la app, del operario,
+        /// de algun sensor, telefono, marca, modelo,
+        /// y devuelve el listado de los telefonos y sus relaciones
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        [HttpGet("info")]
+        public async Task<ActionResult<List<SensorTelefonoViewModel>>> GetTelInfo(string info = null)
+        {
+            try
+            {
+                IQueryable<SensorTelefonoViewModel> lst = from t in _context.Telefonos
+                                                          join s in _context.Sensor
+                                                          on t.Id equals s.Id
+                                                          join i in _context.Instalaciones
+                                                          on t.Id equals i.TelefonoId
+                                                          join o in _context.Operarios
+                                                          on i.OperarioId equals o.Id
+                                                          join a in _context.Apps
+                                                          on i.AppId equals a.Id
+
+                                                          select new SensorTelefonoViewModel
+                                                          {
+                                                              Id = t.Id,
+                                                              Marca = t.Marca,
+                                                              Modelo = t.Modelo,
+                                                              Precio = t.Precio,
+                                                              InstalllExito = i.Exitosa,
+                                                              InstallDate=i.Fecha,
+                                                              Sensor = s.Nombre,
+                                                              ApellidoOperario = o.Nombre,
+                                                              NombreOperario = o.Apellido,
+                                                              App = a.Nombre
+                                                          };
+                if (info != null && !info.Equals(""))
+                {
+                    lst = lst.Where(x => x.Marca == info || x.Sensor.Contains(info)||x.Modelo.Contains(info) || x.App.Contains(info) || x.ApellidoOperario.Contains(info));
+                }
+                return await lst.ToListAsync();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+        }
+        #endregion
+
         [HttpGet("search")]
         public async Task<dynamic> Search(string sen, string apli)
         {
@@ -72,10 +125,31 @@ namespace TFBackEnd.Api.Controllers
 
         // GET api/<TelefonosController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
+        public async Task<ActionResult<Telefono>> GetById(int? id)
 
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return BadRequest();
+                }
+                var telefono = await _context.Telefonos.FindAsync(id.Value);
+
+                if (telefono == null)
+                {
+                    return NotFound();
+                }
+
+                return telefono;
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("Error al intentar recuperar datos de registro solicitado", ex.Message);
+            }
+
+            return Ok(200);
         }
 
         // POST api/<TelefonosController>
@@ -93,14 +167,14 @@ namespace TFBackEnd.Api.Controllers
                 _context.Telefonos.Add(telefono);
                 await _context.SaveChangesAsync();
 
-                
+
             }
             catch (Exception ex)
             {
 
                 throw new Exception(ex.ToString());
             }
-            
+
             return CreatedAtAction("GetTelefonos", new { id = telefono.Id }, telefono);
         }
 
@@ -156,12 +230,20 @@ namespace TFBackEnd.Api.Controllers
 
                 // Si llegamos aquí es porque todo salió bien
                 // devolvemos OK (http 200) y los datos de los sensores
-               // return Ok(telefono);
+                // return Ok(telefono);
             }
-            catch (Exception ex)
+            catch (DbUpdateConcurrencyException)
             {
+                if (!TelefonoExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Ya se encuentra registrado");
+                }
 
-                throw new Exception(ex.ToString());
+
             }
 
             return CreatedAtAction("GetTelefonos", new { id = telefono.Id }, telefono);
@@ -169,8 +251,24 @@ namespace TFBackEnd.Api.Controllers
 
         // DELETE api/<TelefonosController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> DeleteInstalacion(int id)
         {
+
+            var telefono = await _context.Telefonos.FindAsync(id);
+            if (telefono == null)
+            {
+                return NotFound();
+            }
+
+            _context.Telefonos.Remove(telefono);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool TelefonoExists(int id)
+        {
+            return _context.Telefonos.Any(e => e.Id == id);
         }
     }
 }

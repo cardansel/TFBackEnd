@@ -50,8 +50,8 @@ namespace TFBackEnd.Api
                     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
             services.AddDbContext<TFBackEndApiContext>(options =>
-                   // options.UseSqlServer(Configuration.GetConnectionString("TFBackEndApiContext")));
-                     options.UseMySQL(Configuration.GetConnectionString("TFBackEndApiContext")));
+                   options.UseSqlServer(Configuration.GetConnectionString("TFBackEndApiContext")));
+                   //  options.UseMySQL(Configuration.GetConnectionString("TFBackEndApiContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
