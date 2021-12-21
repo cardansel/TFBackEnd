@@ -263,7 +263,8 @@ namespace TFBackEnd.Api.Controllers
             _context.Telefonos.Remove(telefono);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            //return NoContent();
+            return CreatedAtAction("GetById", new { id = telefono.Id }, telefono);
         }
 
         private bool TelefonoExists(int id)

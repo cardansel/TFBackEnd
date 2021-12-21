@@ -134,8 +134,26 @@ namespace TFBackEnd.Api.Controllers
 
         // DELETE api/<SensoresController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> DeleteSensor(int id)
         {
+            var sensor = await _context.Sensor.FindAsync(id);
+            if (sensor == null)
+            {
+                return NotFound();
+            }
+
+            _context.Sensor.Remove(sensor);
+            await _context.SaveChangesAsync();
+
+            //return NoContent();
+            return CreatedAtAction("GetSensor", new { id = sensor.Id }, sensor);
+
         }
+
+        //private bool SensorExists(int id)
+        //{
+        //    return _context.Sensor.Any(e => e.Id == id);
+        //}
     }
+
 }
