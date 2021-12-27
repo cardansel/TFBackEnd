@@ -110,7 +110,8 @@ namespace TFBackEnd.Api.Controllers
                 }
             }
 
-            return NoContent();
+            //return NoContent();
+            return CreatedAtAction("GetApps", new { id = app.Id }, app);
         }
 
         // POST: api/Apps
