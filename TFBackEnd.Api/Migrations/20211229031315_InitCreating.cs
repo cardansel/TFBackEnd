@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using MySql.EntityFrameworkCore.Metadata;
 
 namespace TFBackEnd.Api.Migrations
 {
-    public partial class InitialCreating : Migration
+    public partial class InitCreating : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,8 +13,8 @@ namespace TFBackEnd.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -25,9 +26,9 @@ namespace TFBackEnd.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: true),
+                    Apellido = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -39,8 +40,8 @@ namespace TFBackEnd.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Nombre = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -52,10 +53,10 @@ namespace TFBackEnd.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Precio = table.Column<float>(type: "real", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Marca = table.Column<string>(type: "text", nullable: true),
+                    Modelo = table.Column<string>(type: "text", nullable: true),
+                    Precio = table.Column<float>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,12 +68,12 @@ namespace TFBackEnd.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Exitosa = table.Column<bool>(type: "bit", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OperarioId = table.Column<int>(type: "int", nullable: true),
-                    AppId = table.Column<int>(type: "int", nullable: true),
-                    TelefonoId = table.Column<int>(type: "int", nullable: true)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Exitosa = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime", nullable: false),
+                    OperarioId = table.Column<int>(type: "int", nullable: false),
+                    AppId = table.Column<int>(type: "int", nullable: false),
+                    TelefonoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,19 +83,19 @@ namespace TFBackEnd.Api.Migrations
                         column: x => x.AppId,
                         principalTable: "Apps",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Instalaciones_Operarios_OperarioId",
                         column: x => x.OperarioId,
                         principalTable: "Operarios",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Instalaciones_Telefonos_TelefonoId",
                         column: x => x.TelefonoId,
                         principalTable: "Telefonos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

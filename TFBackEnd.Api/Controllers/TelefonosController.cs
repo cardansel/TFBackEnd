@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TFBackEnd.Api.Data;
 using TFBackEnd.Api.Models;
+using TFBackEnd.Api.Models.ViewModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,10 +15,10 @@ namespace TFBackEnd.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    
+
     public class TelefonosController : ControllerBase
     {
-     private readonly TFBackEndApiContext _context;
+        private readonly TFBackEndApiContext _context;
 
         public TelefonosController(TFBackEndApiContext context)
         {
@@ -27,24 +28,74 @@ namespace TFBackEnd.Api.Controllers
 
         // GET: api/<TelefonosController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Telefono>>> GetTelefonos()
+        public async Task<ActionResult<IEnumerable<SensorTelefonoViewModel>>> GetTelefonos()
         {
+            var lst = new List<SensorTelefonoViewModel>();
+            //var tel = new List<Telefono>();
+
             try
             {
-                return await _context.Telefonos.ToListAsync();
+
+                lst = await (from s in _context.Sensor
+                             join t in _context.Telefonos
+                              on s.Id equals t.Id
+                             select new SensorTelefonoViewModel
+                             {
+                                 Marca = t.Marca,
+                                 Modelo = t.Modelo,
+                                 Sensor = s.Nombre,
+                                 Precio = t.Precio
+                             }).ToListAsync();
+
+                foreach (var item in lst)
+                {
+                    SensorTelefonoViewModel st = new SensorTelefonoViewModel();
+                    st.Marca = item.Marca;
+                    st.Modelo = item.Modelo;
+                    st.Sensor = item.Sensor;
+                    st.Precio = item.Precio;
+
+                    lst.Add(item);
+                };
+
+
+                return lst;
             }
             catch (Exception ex)
             {
 
                 throw new Exception(ex.ToString());
             }
+         
         }
 
         // GET api/<TelefonosController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Telefono>> GetById(int? id)
         {
-            return "value";
+            var telefono = new Telefono();
+
+            try
+            {
+                if (id == null)
+                {
+                    return BadRequest();
+                }
+
+                telefono = await _context.Telefonos.FindAsync(id.Value);
+
+                if (telefono == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+
+            return telefono;
         }
 
         // POST api/<TelefonosController>
@@ -56,9 +107,11 @@ namespace TFBackEnd.Api.Controllers
                 //Cada Sensor recibe un telefono
                 foreach (var item in telefono.SensoresList)
                 {
-                    Sensor s =await _context.Sensor.FindAsync(item);
+                    Sensor s = await _context.Sensor.FindAsync(item);
                     telefono.Sensores.Add(s);
                 }
+
+
                 _context.Telefonos.Add(telefono);
                 await _context.SaveChangesAsync();
 
@@ -77,7 +130,7 @@ namespace TFBackEnd.Api.Controllers
         {
             try
             {
-                if (id!=telefono.Id)
+                if (id != telefono.Id)
                 {
                     return BadRequest();
                 }
@@ -134,8 +187,27 @@ namespace TFBackEnd.Api.Controllers
 
         // DELETE api/<TelefonosController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int? id)
         {
+            var telefono = new Telefono();
+
+            try
+            {
+                if (id == null)
+                {
+                    return BadRequest();
+                }
+
+                telefono = await _context.Telefonos.FindAsync(id);
+                _context.Remove(telefono);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+            return CreatedAtAction("GetTelefonos", new { id = telefono.Id }, telefono);
         }
     }
 }

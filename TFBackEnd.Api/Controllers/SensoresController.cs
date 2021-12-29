@@ -3,9 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
+
 using TFBackEnd.Api.Data;
 using TFBackEnd.Api.Models;
+using TFBackEnd.Api.Models.ViewModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,24 +28,67 @@ namespace TFBackEnd.Api.Controllers
 
         // GET: api/<SensoresController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Sensor>>> GetSensor()
+        public async Task<ActionResult<IEnumerable<SensorTelefonoViewModel>>> GetSensor()
         {
+            var lst = new List<SensorTelefonoViewModel>();
             try
             {
-                return await _context.Sensor.ToListAsync();
+                lst =await (from s in _context.Sensor
+                       join t in _context.Telefonos
+                        on s.Id equals t.Id
+                       select new SensorTelefonoViewModel
+                       {
+                           Marca = t.Marca,
+                           Modelo = t.Modelo,
+                           Sensor = s.Nombre,
+                           Precio = t.Precio
+                       }).ToListAsync();
+
+                foreach (var item in lst)
+                {
+                        var  Sensor= item.Sensor;
+                }
+                
+                //return lst;
             }
             catch (Exception ex)
             {
 
                 throw new Exception(ex.ToString());
             }
+
+            return lst;
         }
 
         // GET api/<SensoresController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Sensor>> GetById(int? id)
         {
-            return "value";
+            var sensor = new Sensor();
+
+
+            try
+            {
+                if (id == null)
+                {
+                    return BadRequest();
+                }
+
+                sensor = await _context.Sensor.FindAsync(id);
+
+                if (sensor == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("Error al intentar recuperar la informacion del registro", ex.Message);
+            }
+
+
+            return sensor;
         }
 
         // POST api/<SensoresController>
@@ -50,13 +97,13 @@ namespace TFBackEnd.Api.Controllers
         {
             try
             {
-                //Cada Telefono recibido le agrego un sensor
-                foreach (var item in sensor.TelefonosList)
-                {
-                    Telefono t = await _context.Telefonos.FindAsync(item);
-                    sensor.Telefonos.Add(t);
-                }
-                _context.Sensor.Add(sensor);
+                    //Cada Telefono recibido le agrego un sensor
+                    foreach (var item in sensor.TelefonosList)
+                    {
+                        Telefono t = await _context.Telefonos.FindAsync(item);
+                        sensor.Telefonos.Add(t);
+                    }
+              _context.Sensor.Add(sensor);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -113,11 +160,11 @@ namespace TFBackEnd.Api.Controllers
 
                 //Avisamos que hemos modificado el sensor para que EF tome los cambios
                 //al guardar
-               // _context.Entry(oSensor).State = EntityState.Detached;
+                // _context.Entry(oSensor).State = EntityState.Detached;
 
                 _context.Entry(sensor).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-               // return Ok(sensor);
+                // return Ok(sensor);
                 // Si llegamos aquí es porque todo salió bien
                 // devolvemos OK (http 200) y los datos de los sensores
 
@@ -128,13 +175,31 @@ namespace TFBackEnd.Api.Controllers
 
                 throw new Exception(ex.ToString());
             }
-            
+
         }
 
         // DELETE api/<SensoresController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int? id)
         {
+            var sensor = new Sensor();
+
+            try
+            {
+                if (id==null)
+                {
+                    return BadRequest();
+                }
+
+                sensor = await _context.Sensor.FindAsync(id);
+                _context.Remove(sensor);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+
+            return CreatedAtAction("GetSensor", new { id = sensor.Id }, sensor);
         }
     }
 }
