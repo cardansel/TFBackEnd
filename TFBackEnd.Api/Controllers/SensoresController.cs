@@ -28,6 +28,10 @@ namespace TFBackEnd.Api.Controllers
         {
             try
             {
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
                 return await _context.Sensor.ToListAsync();
             }
             catch (Exception ex)
@@ -48,21 +52,27 @@ namespace TFBackEnd.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Sensor>> PostSensor(Sensor sensor)
         {
+            //Capturar el error cuando da error de list telefonos y sensores
             try
             {
                 //Cada Telefono recibido le agrego un sensor
-                foreach (var item in sensor.TelefonosList)
+                if (sensor.TelefonosList != null)
                 {
-                    Telefono t = await _context.Telefonos.FindAsync(item);
-                    sensor.Telefonos.Add(t);
+                    foreach (var item in sensor.TelefonosList)
+                    {
+                        Telefono t = await _context.Telefonos.FindAsync(item);
+                        sensor.Telefonos.Add(t);
+                    }
                 }
+
+
                 _context.Sensor.Add(sensor);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (InvalidCastException ex)
             {
 
-                throw new Exception(ex.ToString());
+                //throw new Exception(ex.ToString());
             }
 
 
@@ -113,11 +123,11 @@ namespace TFBackEnd.Api.Controllers
 
                 //Avisamos que hemos modificado el sensor para que EF tome los cambios
                 //al guardar
-               // _context.Entry(oSensor).State = EntityState.Detached;
+                // _context.Entry(oSensor).State = EntityState.Detached;
 
                 _context.Entry(sensor).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-               // return Ok(sensor);
+                // return Ok(sensor);
                 // Si llegamos aquí es porque todo salió bien
                 // devolvemos OK (http 200) y los datos de los sensores
 
@@ -128,7 +138,7 @@ namespace TFBackEnd.Api.Controllers
 
                 throw new Exception(ex.ToString());
             }
-            
+
         }
 
         // DELETE api/<SensoresController>/5

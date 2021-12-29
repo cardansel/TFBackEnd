@@ -38,6 +38,35 @@ namespace TFBackEnd.Api.Controllers
             }
         }
 
+<<<<<<< Updated upstream
+=======
+        [HttpGet("InstallDate")]
+        public async Task<dynamic> InstallDate(DateTime date)
+        {
+            date = date.Date;
+            //Modificar
+            try
+            {
+                return await _context.Operarios
+                        .Select(item => new
+                        {
+                            item.Nombre,
+                            item.Apellido,
+                            apliInstall = _context.Instalaciones
+                                .Where(i => i.Fecha.Date == date &&
+                                        i.Exitosa == true &&
+                                        i.Exitosa==false &&
+                                        i.Operario.Id == item.Id)
+                                .Count()
+                        }).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+        }
+
+>>>>>>> Stashed changes
         // GET api/<OperariosController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Operario>> GetByIdOperario(int? id)
