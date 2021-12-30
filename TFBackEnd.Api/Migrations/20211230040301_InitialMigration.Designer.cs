@@ -9,8 +9,8 @@ using TFBackEnd.Api.Data;
 namespace TFBackEnd.Api.Migrations
 {
     [DbContext(typeof(TFBackEndApiContext))]
-    [Migration("20211229031315_InitCreating")]
-    partial class InitCreating
+    [Migration("20211230040301_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

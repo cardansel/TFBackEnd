@@ -47,16 +47,23 @@ namespace TFBackEnd.Api.Controllers
                                  Precio = t.Precio
                              }).ToListAsync();
 
-                foreach (var item in lst)
+                foreach (var item in lst.Select((tel, i) => new { i, tel }))
                 {
                     SensorTelefonoViewModel st = new SensorTelefonoViewModel();
-                    st.Marca = item.Marca;
-                    st.Modelo = item.Modelo;
-                    st.Sensor = item.Sensor;
-                    st.Precio = item.Precio;
+                    st.Marca = item.i + "" + item.tel;
+                    lst.Add(st);
+                }
 
-                    lst.Add(item);
-                };
+                //foreach (var item in lst)
+                //{
+                //    SensorTelefonoViewModel st = new SensorTelefonoViewModel();
+                //    st.Marca = item.Marca;
+                //    st.Modelo = item.Modelo;
+                //    st.Sensor = item.Sensor;
+                //    st.Precio = item.Precio;
+
+                //    lst.Add(item);
+                //};
 
 
                 return lst;
@@ -66,7 +73,7 @@ namespace TFBackEnd.Api.Controllers
 
                 throw new Exception(ex.ToString());
             }
-         
+
         }
 
         // GET api/<TelefonosController>/5
