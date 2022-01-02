@@ -38,8 +38,7 @@ namespace TFBackEnd.Api.Controllers
             }
         }
 
-<<<<<<< Updated upstream
-=======
+
         [HttpGet("InstallDate")]
         public async Task<dynamic> InstallDate(DateTime date)
         {
@@ -66,7 +65,7 @@ namespace TFBackEnd.Api.Controllers
             }
         }
 
->>>>>>> Stashed changes
+
         // GET api/<OperariosController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Operario>> GetByIdOperario(int? id)

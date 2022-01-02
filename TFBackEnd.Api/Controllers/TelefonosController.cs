@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TFBackEnd.Api.Data;
 using TFBackEnd.Api.Models;
+using TFBackEnd.Api.Models.ViewModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,10 +15,10 @@ namespace TFBackEnd.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    
+
     public class TelefonosController : ControllerBase
     {
-     private readonly TFBackEndApiContext _context;
+        private readonly TFBackEndApiContext _context;
 
         public TelefonosController(TFBackEndApiContext context)
         {
@@ -27,21 +28,28 @@ namespace TFBackEnd.Api.Controllers
 
         // GET: api/<TelefonosController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Telefono>>> GetTelefonos()
+        public async Task<ActionResult<List<Telefono>>> GetTelefonos()
         {
+            
+
             try
             {
-                return await _context.Telefonos.ToListAsync();
+                return await _context.Telefonos
+                    .Include(x => x.Sensores)
+                    .Include(x => x.Instalaciones)
+                    .ToListAsync();
+
+
             }
             catch (Exception ex)
             {
 
                 throw new Exception(ex.ToString());
             }
+
         }
 
-<<<<<<< Updated upstream
-=======
+
         //info app y operario
 
         #region Info App Operario
@@ -70,20 +78,20 @@ namespace TFBackEnd.Api.Controllers
 
                                                           select new SensorTelefonoViewModel
                                                           {
-                                                              Id = t.Id,
-                                                              Marca = t.Marca,
-                                                              Modelo = t.Modelo,
-                                                              Precio = t.Precio,
-                                                              InstalllExito = i.Exitosa,
-                                                              InstallDate=i.Fecha,
-                                                              Sensor = s.Nombre,
-                                                              ApellidoOperario = o.Nombre,
-                                                              NombreOperario = o.Apellido,
-                                                              App = a.Nombre
+                                                              //Id = t.Id,
+                                                              //Marca = t.Marca,
+                                                              //Modelo = t.Modelo,
+                                                              //Precio = t.Precio,
+                                                              //InstallExito = i.Exitosa,
+                                                              //InstallDate=i.Fecha,
+                                                              //Sensor = s.Nombre,
+                                                              //ApellidoOperario = o.Nombre,
+                                                              //NombreOperario = o.Apellido,
+                                                              //App = a.Nombre
                                                           };
                 if (info != null && !info.Equals(""))
                 {
-                    lst = lst.Where(x => x.Marca == info || x.Sensor.Contains(info)||x.Modelo.Contains(info) || x.App.Contains(info) || x.ApellidoOperario.Contains(info));
+                    lst = lst.Where(x => x.Marca == info || x.Sensor.Contains(info)||x.Modelo.Contains(info) /*|| x.App.Contains(info) || x.ApellidoOperario.Contains(info)*/);
                 }
                 return await lst.ToListAsync();
 
@@ -126,12 +134,33 @@ namespace TFBackEnd.Api.Controllers
             }
         }
 
->>>>>>> Stashed changes
         // GET api/<TelefonosController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Telefono>> GetById(int? id)
         {
-            return "value";
+            var telefono = new Telefono();
+
+            try
+            {
+                if (id == null)
+                {
+                    return BadRequest();
+                }
+
+                telefono = await _context.Telefonos.FindAsync(id.Value);
+
+                if (telefono == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+
+            return telefono;
         }
 
         // POST api/<TelefonosController>
@@ -143,9 +172,11 @@ namespace TFBackEnd.Api.Controllers
                 //Cada Sensor recibe un telefono
                 foreach (var item in telefono.SensoresList)
                 {
-                    Sensor s =await _context.Sensor.FindAsync(item);
+                    Sensor s = await _context.Sensor.FindAsync(item);
                     telefono.Sensores.Add(s);
                 }
+
+
                 _context.Telefonos.Add(telefono);
                 await _context.SaveChangesAsync();
 
@@ -164,7 +195,7 @@ namespace TFBackEnd.Api.Controllers
         {
             try
             {
-                if (id!=telefono.Id)
+                if (id != telefono.Id)
                 {
                     return BadRequest();
                 }
@@ -221,8 +252,27 @@ namespace TFBackEnd.Api.Controllers
 
         // DELETE api/<TelefonosController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int? id)
         {
+            var telefono = new Telefono();
+
+            try
+            {
+                if (id == null)
+                {
+                    return BadRequest();
+                }
+
+                telefono = await _context.Telefonos.FindAsync(id);
+                _context.Remove(telefono);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+            return CreatedAtAction("GetTelefonos", new { id = telefono.Id }, telefono);
         }
     }
 }

@@ -25,21 +25,72 @@ namespace TFBackEnd.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Instalacion>>> GetInstalaciones()
         {
-            return await _context.Instalaciones.ToListAsync();
+            try
+            {
+
+                //return await _context.Instalaciones
+                //               .Include(x => x.App)
+                //               .Include(x => x.Operario)
+                //               .Include(x => x.Telefono)
+                //               .ToListAsync();
+
+                return await _context.Instalaciones
+                        .Where(x => x.AppId == x.Id)
+                        .Select(x => new Instalacion
+                        {
+                            Id = x.Id,
+                            Exitosa = x.Exitosa,
+                            Fecha = x.Fecha,
+
+                            Operario = new Operario
+                            {
+                                Nombre = x.Operario.Nombre,
+                                Apellido = x.Operario.Apellido
+                            },
+
+                            App = new App
+                            {
+                                Nombre = x.App.Nombre
+                            },
+                            Telefono = new Telefono
+                            {
+                                Marca = x.Telefono.Marca,
+                                Modelo = x.Telefono.Modelo,
+                                Precio = x.Telefono.Precio
+                            }
+                        })
+                        .ToListAsync();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
         }
 
         // GET: api/Instalaciones/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Instalacion>> GetInstalacion(int id)
         {
-            var instalacion = await _context.Instalaciones.FindAsync(id);
-
-            if (instalacion == null)
+            try
             {
-                return NotFound();
+                var instalacion = await _context.Instalaciones.FindAsync(id);
+
+                if (instalacion == null)
+                {
+                    return NotFound();
+                }
+                
+                return instalacion;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
             }
 
-            return instalacion;
+            
         }
 
         // PUT: api/Instalaciones/5
@@ -95,7 +146,7 @@ namespace TFBackEnd.Api.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-                return instalacion;
+                //return instalacion;
             }
             catch (Exception ex)
             {

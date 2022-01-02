@@ -25,7 +25,9 @@ namespace TFBackEnd.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<App>>> GetApps()
         {
-            return await _context.Apps.ToListAsync();
+            return await _context.Apps
+                        .Include(x=>x.Instalaciones)
+                        .ToListAsync();
         }
 
         // GET: api/Apps/5
@@ -42,8 +44,7 @@ namespace TFBackEnd.Api.Controllers
             return app;
         }
 
-<<<<<<< Updated upstream:TFBackEnd.Api/Controllers/appsController.cs
-=======
+
         [HttpGet("search")]
         public async Task<dynamic> Search(string install)
         {
@@ -78,7 +79,7 @@ namespace TFBackEnd.Api.Controllers
             }
         }
 
->>>>>>> Stashed changes:TFBackEnd.Api/Controllers/AppsController.cs
+
         // PUT: api/Apps/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

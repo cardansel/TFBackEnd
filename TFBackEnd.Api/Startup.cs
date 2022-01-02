@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TFBackEnd.Api.Data;
+using System.Text.Json.Serialization;
 
 namespace TFBackEnd.Api
 {
@@ -46,16 +47,20 @@ namespace TFBackEnd.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TFBackEnd.Api", Version = "v1" });
             });
 
-<<<<<<< Updated upstream
+
+   services.AddControllers().AddJsonOptions(x =>
+                   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+
+
             services.AddDbContext<TFBackEndApiContext>(options =>
                     options.UseMySQL(Configuration.GetConnectionString("TFBackEndApiContext")));
-=======
+
             //services.AddDbContext<TFBackEndApiContext>(options =>
             //        options.UseSqlServer(Configuration.GetConnectionString("MyConnection")));
 
             services.AddDbContext<TFBackEndApiContext>(options =>
                    options.UseMySQL(Configuration.GetConnectionString("TFBackEndApiContext")));
->>>>>>> Stashed changes
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
