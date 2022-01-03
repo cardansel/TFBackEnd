@@ -20,7 +20,7 @@ namespace TFBackEnd.Api.Models
 
         public virtual ICollection<Instalacion> Instalaciones { get; set; }
 
-
+        
 
         // Esta anotación se usa para decirle a EF que
         // no cree un campo real en la base de datos para este campo

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,21 @@ namespace TFBackEnd.Api.Controllers
         public InstalacionesController(TFBackEndApiContext context)
         {
             _context = context;
+        }
+
+        [HttpGet("eagerLoading/{id:int}")]
+        public async Task<ActionResult<Instalacion>>GetEagerLoading(int id)
+        {
+            var install = await _context.Instalaciones
+                                .Include(x => x.App)
+                                .Include(x => x.Operario)
+                                    .ThenInclude(o => o.Apellido)
+                                .Include(t => t.Telefono)
+                                    .ThenInclude(i => i.Modelo)
+                                .FirstOrDefaultAsync(x => x.Id == id);
+
+            var oInstall = install;
+            return install;
         }
 
         // GET: api/Instalaciones

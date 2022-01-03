@@ -16,7 +16,7 @@ namespace TFBackEnd.Api.Models
         public int Id { get; set; }
         public string Nombre { get; set; }
 
-
+       
         // Esta anotación se usa para decirle a EF que
         // no cree un campo real en la base de datos para este campo
         // El campo TelefonosList nos servirá para recibir una lista

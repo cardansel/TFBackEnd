@@ -9,8 +9,8 @@ using TFBackEnd.Api.Data;
 namespace TFBackEnd.Api.Migrations
 {
     [DbContext(typeof(TFBackEndApiContext))]
-    [Migration("20211230040301_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20220103222301_InitCreating")]
+    partial class InitCreating
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,6 +46,28 @@ namespace TFBackEnd.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Apps");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nombre = "Whatsapp"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nombre = "Facebook"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nombre = "Instagran"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Nombre = "Telegran"
+                        });
                 });
 
             modelBuilder.Entity("TFBackEnd.Api.Models.Instalacion", b =>
@@ -95,6 +117,20 @@ namespace TFBackEnd.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Operarios");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Apellido = "Testing",
+                            Nombre = "Testing"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Apellido = "Testing 2",
+                            Nombre = "Testing 2"
+                        });
                 });
 
             modelBuilder.Entity("TFBackEnd.Api.Models.Sensor", b =>
@@ -109,6 +145,28 @@ namespace TFBackEnd.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sensor");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nombre = "Sensor Giroscopio"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nombre = "Sensor de Movimiento"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nombre = "Sensor de Luz"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Nombre = "Sensor de Proximidad"
+                        });
                 });
 
             modelBuilder.Entity("TFBackEnd.Api.Models.Telefono", b =>

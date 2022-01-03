@@ -4,7 +4,7 @@ using MySql.EntityFrameworkCore.Metadata;
 
 namespace TFBackEnd.Api.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitCreating : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -120,6 +120,37 @@ namespace TFBackEnd.Api.Migrations
                         principalTable: "Telefonos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Apps",
+                columns: new[] { "Id", "Nombre" },
+                values: new object[,]
+                {
+                    { 1, "Whatsapp" },
+                    { 2, "Facebook" },
+                    { 3, "Instagran" },
+                    { 4, "Telegran" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Operarios",
+                columns: new[] { "Id", "Apellido", "Nombre" },
+                values: new object[,]
+                {
+                    { 1, "Testing", "Testing" },
+                    { 2, "Testing 2", "Testing 2" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Sensor",
+                columns: new[] { "Id", "Nombre" },
+                values: new object[,]
+                {
+                    { 1, "Sensor Giroscopio" },
+                    { 2, "Sensor de Movimiento" },
+                    { 3, "Sensor de Luz" },
+                    { 4, "Sensor de Proximidad" }
                 });
 
             migrationBuilder.CreateIndex(
