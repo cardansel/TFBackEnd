@@ -108,7 +108,8 @@ namespace TFBackEnd.Api.Controllers
                 }
             }
 
-            return NoContent();
+            //return NoContent();
+            return CreatedAtAction("GetApp", new { id = app.Id }, app);
         }
 
         // POST: api/Apps
@@ -135,7 +136,8 @@ namespace TFBackEnd.Api.Controllers
             _context.Apps.Remove(app);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            //return NoContent();
+            return CreatedAtAction("GetApp", new { id = app.Id }, app);
         }
 
         private bool AppExists(int id)
