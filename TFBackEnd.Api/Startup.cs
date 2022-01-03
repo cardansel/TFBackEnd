@@ -52,11 +52,11 @@ namespace TFBackEnd.Api
                    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
 
-            services.AddDbContext<TFBackEndApiContext>(options =>
-                    options.UseMySQL(Configuration.GetConnectionString("TFBackEndApiContext")));
-
             //services.AddDbContext<TFBackEndApiContext>(options =>
-            //        options.UseSqlServer(Configuration.GetConnectionString("MyConnection")));
+            //        options.UseMySQL(Configuration.GetConnectionString("TFBackEndApiContext")));
+
+            services.AddDbContext<TFBackEndApiContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("MyConnection")));
 
             services.AddDbContext<TFBackEndApiContext>(options =>
                    options.UseMySQL(Configuration.GetConnectionString("TFBackEndApiContext")));
