@@ -30,14 +30,14 @@ namespace TFBackEnd.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Sensor>>> GetSensor()
         {
-           
+
             try
             {
 
                 return await _context.Sensor
                                .Include(x => x.Telefonos)
                                .ToListAsync();
-             
+
 
             }
             catch (Exception ex)
@@ -103,7 +103,7 @@ namespace TFBackEnd.Api.Controllers
 
                 _context.Sensor.Add(sensor);
 
-              _context.Sensor.Add(sensor);
+                _context.Sensor.Add(sensor);
 
                 await _context.SaveChangesAsync();
             }
@@ -183,24 +183,34 @@ namespace TFBackEnd.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int? id)
         {
-            var sensor = new Sensor();
 
             try
             {
-                if (id==null)
+                if (id == null)
                 {
                     return BadRequest();
                 }
 
-                sensor = await _context.Sensor.FindAsync(id);
-                _context.Remove(sensor);
+
+                //Busco el sensor que tiene el ID que recibo
+                var sensor = await _context.Sensor.FindAsync(id.Value);
+
+                if (sensor == null)
+                {
+                    return NotFound();
+                }
+
+                //Ahora borro el sensor
+                _context.Sensor.Remove(sensor);
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }
 
-            return CreatedAtAction("GetSensor", new { id = sensor.Id }, sensor);
+            // Devolvemos NO CONTENT porque ya no existe
+            return NoContent();
         }
     }
 }

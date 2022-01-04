@@ -32,9 +32,10 @@ namespace TFBackEnd.Api.Data
             modelBuilder.Entity<App>().HasData(new App[] { app1, app2, app3, app4 });
 
             /*Cargo datos generados para Operarios*/
-            var operario1 = new Operario() {Id=1, Nombre = "Testing", Apellido = "Testing" };
-            var operario2 = new Operario() {Id=2, Nombre = "Testing 2", Apellido = "Testing 2" };
-            modelBuilder.Entity<Operario>().HasData(new Operario[] { operario1, operario2 });
+            var operario1 = new Operario() { Id=1, Nombre = "Testing", Apellido = "Testing" };
+            var operario2 = new Operario() { Id = 2, Nombre = "Testing 2", Apellido = "Testing 2" };
+            var operario3 = new Operario() { Id = 3, Nombre = "Testing 3", Apellido = "Testing 3" };
+            modelBuilder.Entity<Operario>().HasData(new Operario[] { operario1, operario2,operario3});
 
 
 

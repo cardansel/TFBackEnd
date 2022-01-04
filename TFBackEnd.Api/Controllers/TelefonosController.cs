@@ -105,40 +105,14 @@ namespace TFBackEnd.Api.Controllers
         #endregion
 
         //[HttpGet("search")]
-        //public async Task<dynamic> Search(string info)
+        //public async Task<dynamic> Search(string info=motorola,string info2=giroscopio)
         //{
 
         //    //verificar datos 
         //    try
         //    {
-        //        IQueryable<SensorTelefonoViewModel> lst = from t in _context.Telefonos
-        //                                                  join s in _context.Sensor
-        //                                                  on t.Id equals s.Id
-        //                                                  join i in _context.Instalaciones
-        //                                                  on t.Id equals i.TelefonoId
-        //                                                  join o in _context.Operarios
-        //                                                  on i.OperarioId equals o.Id
-        //                                                  join a in _context.Apps
-        //                                                  on i.AppId equals a.Id
-
-        //                                                  select new SensorTelefonoViewModel
-        //                                                  {
-        //                                                      Id = t.Id,
-        //                                                      Marca = t.Marca,
-        //                                                      Modelo = t.Modelo,
-        //                                                      Precio = t.Precio,
-        //                                                      InstallExito = i.Exitosa,
-        //                                                      InstallDate = i.Fecha,
-        //                                                      Sensor = s.Nombre,
-        //                                                      ApellidoOperario = o.Nombre,
-        //                                                      NombreOperario = o.Apellido,
-        //                                                      App = a.Nombre
-        //                                                  };
-        //        if (info != null && !info.Equals(""))
-        //        {
-        //            lst = lst.Where(x => x.Marca == info || x.Sensor.Contains(info) || x.Modelo.Contains(info) /*|| x.App.Contains(info) || x.ApellidoOperario.Contains(info)*/);
-        //        }
-        //        return await lst.ToListAsync();
+        //     
+        //        
         //        //return await _context.Instalaciones.Where(item => item.App.Nombre == apli)
         //        //   .Select(item => new
         //        //   {
@@ -282,8 +256,7 @@ namespace TFBackEnd.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int? id)
         {
-            var telefono = new Telefono();
-
+            
             try
             {
                 if (id == null)
@@ -291,8 +264,18 @@ namespace TFBackEnd.Api.Controllers
                     return BadRequest();
                 }
 
-                telefono = await _context.Telefonos.FindAsync(id);
-                _context.Remove(telefono);
+
+                //Busco el telefono que tiene el ID que recibo
+                var telefono = await _context.Telefonos.FindAsync(id);
+
+                if (telefono==null)
+                {
+                    return NotFound();
+                }
+
+                //Ahora borro el telefono
+                _context.Telefonos.Remove(telefono);
+                await _context.SaveChangesAsync();
 
             }
             catch (Exception ex)
@@ -300,7 +283,8 @@ namespace TFBackEnd.Api.Controllers
 
                 throw new Exception(ex.ToString());
             }
-            return CreatedAtAction("GetTelefonos", new { id = telefono.Id }, telefono);
+            // Devolvemos NO CONTENT porque ya no existe
+            return NoContent(); 
         }
     }
 }

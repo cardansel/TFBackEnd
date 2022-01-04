@@ -48,8 +48,8 @@ namespace TFBackEnd.Api
             });
 
 
-   services.AddControllers().AddJsonOptions(x =>
-                   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+           services.AddControllers().AddJsonOptions(x =>
+                           x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
 
             //services.AddDbContext<TFBackEndApiContext>(options =>
