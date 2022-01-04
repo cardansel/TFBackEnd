@@ -55,8 +55,8 @@ namespace TFBackEnd.Api
             //services.AddDbContext<TFBackEndApiContext>(options =>
             //        options.UseMySQL(Configuration.GetConnectionString("TFBackEndApiContext")));
 
-            services.AddDbContext<TFBackEndApiContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("MyConnection")));
+            //services.AddDbContext<TFBackEndApiContext>(options =>
+            //        options.UseSqlServer(Configuration.GetConnectionString("MyConnection")));
 
             services.AddDbContext<TFBackEndApiContext>(options =>
                    options.UseMySQL(Configuration.GetConnectionString("TFBackEndApiContext")));

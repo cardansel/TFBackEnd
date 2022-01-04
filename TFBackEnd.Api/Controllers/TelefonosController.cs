@@ -78,20 +78,20 @@ namespace TFBackEnd.Api.Controllers
 
                                                           select new SensorTelefonoViewModel
                                                           {
-                                                              //Id = t.Id,
-                                                              //Marca = t.Marca,
-                                                              //Modelo = t.Modelo,
-                                                              //Precio = t.Precio,
-                                                              //InstallExito = i.Exitosa,
-                                                              //InstallDate=i.Fecha,
-                                                              //Sensor = s.Nombre,
-                                                              //ApellidoOperario = o.Nombre,
-                                                              //NombreOperario = o.Apellido,
-                                                              //App = a.Nombre
+                                                              Id = t.Id,
+                                                              Marca = t.Marca,
+                                                              Modelo = t.Modelo,
+                                                              Precio = t.Precio,
+                                                              InstallExito = i.Exitosa,
+                                                              InstallDate = i.Fecha,
+                                                              Sensor = s.Nombre,
+                                                              ApellidoOperario = o.Nombre,
+                                                              NombreOperario = o.Apellido,
+                                                              Aplicacion = a.Nombre
                                                           };
                 if (info != null && !info.Equals(""))
                 {
-                    lst = lst.Where(x => x.Marca == info || x.Sensor.Contains(info)||x.Modelo.Contains(info) /*|| x.App.Contains(info) || x.ApellidoOperario.Contains(info)*/);
+                    lst = lst.Where(x => x.Marca == info || x.Sensor.Contains(info)||x.Modelo.Contains(info) || x.Aplicacion.Contains(info) || x.ApellidoOperario.Contains(info));
                 }
                 return await lst.ToListAsync();
 
@@ -104,63 +104,63 @@ namespace TFBackEnd.Api.Controllers
         }
         #endregion
 
-        [HttpGet("search")]
-        public async Task<dynamic> Search(string sen=null, string apli=null)
-        {
+        //[HttpGet("search")]
+        //public async Task<dynamic> Search(string info)
+        //{
 
-            //verificar datos 
-            try
-            {
-                IQueryable<SensorTelefonoViewModel> lst = from t in _context.Telefonos
-                                                          join s in _context.Sensor
-                                                          on t.Id equals s.Id
-                                                          join i in _context.Instalaciones
-                                                          on t.Id equals i.TelefonoId
-                                                          join o in _context.Operarios
-                                                          on i.OperarioId equals o.Id
-                                                          join a in _context.Apps
-                                                          on i.AppId equals a.Id
+        //    //verificar datos 
+        //    try
+        //    {
+        //        IQueryable<SensorTelefonoViewModel> lst = from t in _context.Telefonos
+        //                                                  join s in _context.Sensor
+        //                                                  on t.Id equals s.Id
+        //                                                  join i in _context.Instalaciones
+        //                                                  on t.Id equals i.TelefonoId
+        //                                                  join o in _context.Operarios
+        //                                                  on i.OperarioId equals o.Id
+        //                                                  join a in _context.Apps
+        //                                                  on i.AppId equals a.Id
 
-                                                          select new SensorTelefonoViewModel
-                                                          {
-                                                              //Id = t.Id,
-                                                              //Marca = t.Marca,
-                                                              //Modelo = t.Modelo,
-                                                              //Precio = t.Precio,
-                                                              //InstallExito = i.Exitosa,
-                                                              //InstallDate=i.Fecha,
-                                                              //Sensor = s.Nombre,
-                                                              //ApellidoOperario = o.Nombre,
-                                                              //NombreOperario = o.Apellido,
-                                                              //App = a.Nombre
-                                                          };
-                if (info != null && !info.Equals(""))
-                {
-                    lst = lst.Where(x => x.Marca == info || x.Sensor.Contains(info) || x.Modelo.Contains(info) /*|| x.App.Contains(info) || x.ApellidoOperario.Contains(info)*/);
-                }
-                return await lst.ToListAsync();
-                //return await _context.Instalaciones.Where(item => item.App.Nombre == apli)
-                //   .Select(item => new
-                //   {
-                //       App = item.App.Nombre,
-                //       Sensor = item.Telefono.Sensores.Where(item => item.Nombre == sen)
-                //           .Select(item => new
-                //           {
-                //               item.Nombre,
-                //               Telefono = item.Telefonos.Select(item => new
-                //               {
-                //                   item.Marca,
-                //                   item.Modelo
-                //               })
-                //           })
+        //                                                  select new SensorTelefonoViewModel
+        //                                                  {
+        //                                                      Id = t.Id,
+        //                                                      Marca = t.Marca,
+        //                                                      Modelo = t.Modelo,
+        //                                                      Precio = t.Precio,
+        //                                                      InstallExito = i.Exitosa,
+        //                                                      InstallDate = i.Fecha,
+        //                                                      Sensor = s.Nombre,
+        //                                                      ApellidoOperario = o.Nombre,
+        //                                                      NombreOperario = o.Apellido,
+        //                                                      App = a.Nombre
+        //                                                  };
+        //        if (info != null && !info.Equals(""))
+        //        {
+        //            lst = lst.Where(x => x.Marca == info || x.Sensor.Contains(info) || x.Modelo.Contains(info) /*|| x.App.Contains(info) || x.ApellidoOperario.Contains(info)*/);
+        //        }
+        //        return await lst.ToListAsync();
+        //        //return await _context.Instalaciones.Where(item => item.App.Nombre == apli)
+        //        //   .Select(item => new
+        //        //   {
+        //        //       App = item.App.Nombre,
+        //        //       Sensor = item.Telefono.Sensores.Where(item => item.Nombre == sen)
+        //        //           .Select(item => new
+        //        //           {
+        //        //               item.Nombre,
+        //        //               Telefono = item.Telefonos.Select(item => new
+        //        //               {
+        //        //                   item.Marca,
+        //        //                   item.Modelo
+        //        //               })
+        //        //           })
 
-                //   }).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
-        }
+        //        //   }).ToListAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.ToString());
+        //    }
+        //}
 
         // GET api/<TelefonosController>/5
         [HttpGet("{id}")]
