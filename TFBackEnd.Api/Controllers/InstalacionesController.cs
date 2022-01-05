@@ -53,40 +53,40 @@ namespace TFBackEnd.Api.Controllers
             try
             {
 
-                //return await _context.Instalaciones
-                //               .Include(x => x.App)
-                //               .Include(x => x.Operario)
-                //               .Include(x => x.Telefono)
-                //               .ToListAsync();
-
                 return await _context.Instalaciones
-                        .Include(x=>x.App)
-                        .Include(x=>x.Operario)
-                        .Include(x=>x.Telefono)
-                        .Select(x => new Instalacion
-                        {
-                            Id = x.Id,
-                            Exitosa = x.Exitosa,
-                            Fecha = x.Fecha,
+                               .Include(x => x.App)
+                               .Include(x => x.Operario)
+                               .Include(x => x.Telefono)
+                               .ToListAsync();
 
-                            Operario = new Operario
-                            {
-                                Nombre = x.Operario.Nombre,
-                                Apellido = x.Operario.Apellido
-                            },
+                //return await _context.Instalaciones
+                //        .Include(x=>x.App)
+                //        .Include(x=>x.Operario)
+                //        .Include(x=>x.Telefono)
+                //        .Select(x => new Instalacion
+                //        {
+                //            Id = x.Id,
+                //            Exitosa = x.Exitosa,
+                //            Fecha = x.Fecha,
 
-                            App = new App
-                            {
-                                Nombre = x.App.Nombre
-                            },
-                            Telefono = new Telefono
-                            {
-                                Marca = x.Telefono.Marca,
-                                Modelo = x.Telefono.Modelo,
-                                Precio = x.Telefono.Precio
-                            }
-                        })
-                        .ToListAsync();
+                //            Operario = new Operario
+                //            {
+                //                Nombre = x.Operario.Nombre,
+                //                Apellido = x.Operario.Apellido
+                //            },
+
+                //            App = new App
+                //            {
+                //                Nombre = x.App.Nombre
+                //            },
+                //            Telefono = new Telefono
+                //            {
+                //                Marca = x.Telefono.Marca,
+                //                Modelo = x.Telefono.Modelo,
+                //                Precio = x.Telefono.Precio
+                //            }
+                //        })
+                //        .ToListAsync();
 
             }
             catch (Exception ex)
