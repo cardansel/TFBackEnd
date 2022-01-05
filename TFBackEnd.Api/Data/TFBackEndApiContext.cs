@@ -18,10 +18,10 @@ namespace TFBackEnd.Api.Data
         protected  override void OnModelCreating(ModelBuilder modelBuilder)
         {
             /*Cargo datos generados para Sensores*/
-            var sensor1 = new Sensor() {Id=1, Nombre = "Sensor Giroscopio" };
-            var sensor2 = new Sensor() {Id=2, Nombre = "Sensor de Movimiento" };
-            var sensor3 = new Sensor() {Id=3, Nombre = "Sensor de Luz" };
-            var sensor4 = new Sensor() {Id=4, Nombre = "Sensor de Proximidad" };
+            var sensor1 = new Sensor() {Id=1, Nombre = " Giroscopio" };
+            var sensor2 = new Sensor() {Id=2, Nombre = " Movimiento" };
+            var sensor3 = new Sensor() {Id=3, Nombre = " Podometro" };
+            var sensor4 = new Sensor() {Id=4, Nombre = " Proximidad" };
             modelBuilder.Entity<Sensor>().HasData(new Models.Sensor[] { sensor1, sensor2, sensor3, sensor4 });
 
             /*Cargo datos generados para Apps*/

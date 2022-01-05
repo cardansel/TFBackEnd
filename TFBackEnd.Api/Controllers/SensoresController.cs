@@ -36,6 +36,7 @@ namespace TFBackEnd.Api.Controllers
 
                 return await _context.Sensor
                                .Include(x => x.Telefonos)
+                               .AsNoTracking()
                                .ToListAsync();
 
 

@@ -139,7 +139,8 @@ namespace TFBackEnd.Api.Migrations
                 values: new object[,]
                 {
                     { 1, "Testing", "Testing" },
-                    { 2, "Testing 2", "Testing 2" }
+                    { 2, "Testing 2", "Testing 2" },
+                    { 3, "Testing 3", "Testing 3" }
                 });
 
             migrationBuilder.InsertData(
@@ -147,10 +148,10 @@ namespace TFBackEnd.Api.Migrations
                 columns: new[] { "Id", "Nombre" },
                 values: new object[,]
                 {
-                    { 1, "Sensor Giroscopio" },
-                    { 2, "Sensor de Movimiento" },
-                    { 3, "Sensor de Luz" },
-                    { 4, "Sensor de Proximidad" }
+                    { 1, " Giroscopio" },
+                    { 2, " Movimiento" },
+                    { 3, " Podometro" },
+                    { 4, " Proximidad" }
                 });
 
             migrationBuilder.CreateIndex(

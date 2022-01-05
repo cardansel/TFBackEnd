@@ -22,21 +22,30 @@ namespace TFBackEnd.Api.Controllers
             _context = context;
         }
 
-        [HttpGet("eagerLoading/{id:int}")]
-        public async Task<ActionResult<Instalacion>>GetEagerLoading(int id)
+        [HttpGet("Search")]
+        public async Task<dynamic> Search(bool status=true)
         {
-            var install = await _context.Instalaciones
-                                .Include(x => x.App)
-                                .Include(x => x.Operario)
-                                    .ThenInclude(o => o.Apellido)
-                                .Include(t => t.Telefono)
-                                    .ThenInclude(i => i.Modelo)
-                                .FirstOrDefaultAsync(x => x.Id == id);
+            try
+            {
+                return await _context.Instalaciones
+                    .Where(item =>
+                        item.Exitosa == status &&
+                        item.Exitosa != status
+                    )
+                    .Select(item=>new { 
+                        app=item.App.Nombre,
+                        Instalacion=item.Fecha
+                    })
+                    .ToListAsync();
 
-            var oInstall = install;
-            return install;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString()); ;
+            }
         }
-
+   
         // GET: api/Instalaciones
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Instalacion>>> GetInstalaciones()
@@ -51,7 +60,9 @@ namespace TFBackEnd.Api.Controllers
                 //               .ToListAsync();
 
                 return await _context.Instalaciones
-                        .Where(x => x.AppId == x.Id)
+                        .Include(x=>x.App)
+                        .Include(x=>x.Operario)
+                        .Include(x=>x.Telefono)
                         .Select(x => new Instalacion
                         {
                             Id = x.Id,

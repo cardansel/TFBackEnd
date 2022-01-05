@@ -30,15 +30,13 @@ namespace TFBackEnd.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Telefono>>> GetTelefonos()
         {
-            
-
             try
             {
                 return await _context.Telefonos
-                    .Include(x => x.Sensores)
-                    .Include(x => x.Instalaciones)
-                    .ToListAsync();
+                      .Include(x => x.Sensores)
 
+                          .AsNoTracking()
+                      .ToListAsync();
 
             }
             catch (Exception ex)
@@ -50,91 +48,33 @@ namespace TFBackEnd.Api.Controllers
         }
 
 
-        //info app y operario
-
-        #region Info App Operario
-        /// <summary>
-        /// Este metodo recibe un string
-        /// puede ser el nombre de la app, del operario,
-        /// de algun sensor, telefono, marca, modelo,
-        /// y devuelve el listado de los telefonos y sus relaciones
-        /// </summary>
-        /// <param name="info"></param>
-        /// <returns></returns>
-        [HttpGet("info")]
-        public async Task<ActionResult<List<SensorTelefonoViewModel>>> GetTelInfo(string info = null)
+        [HttpGet("search")]
+        public async Task<dynamic> Search(string sensor = "Giroscopio", string aplicacion = "WhatsApp")
         {
             try
             {
-                IQueryable<SensorTelefonoViewModel> lst = from t in _context.Telefonos
-                                                          join s in _context.Sensor
-                                                          on t.Id equals s.Id
-                                                          join i in _context.Instalaciones
-                                                          on t.Id equals i.TelefonoId
-                                                          join o in _context.Operarios
-                                                          on i.OperarioId equals o.Id
-                                                          join a in _context.Apps
-                                                          on i.AppId equals a.Id
+                return await _context.Instalaciones.Where(item => item.App.Nombre == aplicacion)
+                                   .Select(item => new
+                                   {
+                                       App = item.App.Nombre,
+                                       Sensor = item.Telefono.Sensores.Where(item => item.Nombre == sensor)
+                                           .Select(item => new
+                                           {
+                                               item.Nombre,
+                                               Telefono = item.Telefonos.Select(item => new
+                                               {
+                                                   item.Marca,
+                                                   item.Modelo
+                                               })
+                                           })
 
-                                                          select new SensorTelefonoViewModel
-                                                          {
-                                                              Id = t.Id,
-                                                              Marca = t.Marca,
-                                                              Modelo = t.Modelo,
-                                                              Precio = t.Precio,
-                                                              InstallExito = i.Exitosa,
-                                                              InstallDate = i.Fecha,
-                                                              Sensor = s.Nombre,
-                                                              ApellidoOperario = o.Nombre,
-                                                              NombreOperario = o.Apellido,
-                                                              Aplicacion = a.Nombre
-                                                          };
-                if (info != null && !info.Equals(""))
-                {
-                    lst = lst.Where(x => x.Marca == info || x.Sensor.Contains(info)||x.Modelo.Contains(info) || x.Aplicacion.Contains(info) || x.ApellidoOperario.Contains(info));
-                }
-                return await lst.ToListAsync();
-
+                                   }).ToListAsync();
             }
             catch (Exception ex)
             {
-
                 throw new Exception(ex.ToString());
             }
         }
-        #endregion
-
-        //[HttpGet("search")]
-        //public async Task<dynamic> Search(string info=motorola,string info2=giroscopio)
-        //{
-
-        //    //verificar datos 
-        //    try
-        //    {
-        //     
-        //        
-        //        //return await _context.Instalaciones.Where(item => item.App.Nombre == apli)
-        //        //   .Select(item => new
-        //        //   {
-        //        //       App = item.App.Nombre,
-        //        //       Sensor = item.Telefono.Sensores.Where(item => item.Nombre == sen)
-        //        //           .Select(item => new
-        //        //           {
-        //        //               item.Nombre,
-        //        //               Telefono = item.Telefonos.Select(item => new
-        //        //               {
-        //        //                   item.Marca,
-        //        //                   item.Modelo
-        //        //               })
-        //        //           })
-
-        //        //   }).ToListAsync();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(ex.ToString());
-        //    }
-        //}
 
         // GET api/<TelefonosController>/5
         [HttpGet("{id}")]
@@ -256,7 +196,7 @@ namespace TFBackEnd.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int? id)
         {
-            
+
             try
             {
                 if (id == null)
@@ -268,7 +208,7 @@ namespace TFBackEnd.Api.Controllers
                 //Busco el telefono que tiene el ID que recibo
                 var telefono = await _context.Telefonos.FindAsync(id);
 
-                if (telefono==null)
+                if (telefono == null)
                 {
                     return NotFound();
                 }
@@ -284,7 +224,7 @@ namespace TFBackEnd.Api.Controllers
                 throw new Exception(ex.ToString());
             }
             // Devolvemos NO CONTENT porque ya no existe
-            return NoContent(); 
+            return NoContent();
         }
     }
 }

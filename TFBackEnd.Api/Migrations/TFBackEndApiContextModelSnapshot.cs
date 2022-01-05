@@ -128,6 +128,12 @@ namespace TFBackEnd.Api.Migrations
                             Id = 2,
                             Apellido = "Testing 2",
                             Nombre = "Testing 2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Apellido = "Testing 3",
+                            Nombre = "Testing 3"
                         });
                 });
 
@@ -148,22 +154,22 @@ namespace TFBackEnd.Api.Migrations
                         new
                         {
                             Id = 1,
-                            Nombre = "Sensor Giroscopio"
+                            Nombre = " Giroscopio"
                         },
                         new
                         {
                             Id = 2,
-                            Nombre = "Sensor de Movimiento"
+                            Nombre = " Movimiento"
                         },
                         new
                         {
                             Id = 3,
-                            Nombre = "Sensor de Luz"
+                            Nombre = " Podometro"
                         },
                         new
                         {
                             Id = 4,
-                            Nombre = "Sensor de Proximidad"
+                            Nombre = " Proximidad"
                         });
                 });
 
