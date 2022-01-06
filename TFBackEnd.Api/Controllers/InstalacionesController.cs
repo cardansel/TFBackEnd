@@ -55,8 +55,20 @@ namespace TFBackEnd.Api.Controllers
 
                 return await _context.Instalaciones
                                .Include(x => x.App)
-                               .Include(x => x.Operario)
-                               .Include(x => x.Telefono)
+                                .Include(x=>x.Operario.Instalaciones)
+                                .Include(x => x.Telefono.Sensores)
+                                .Select(x=>new Instalacion
+                                {
+                                    Id=x.Id,
+                                    Exitosa=x.Exitosa,
+                                    Fecha=x.Fecha,
+
+                                    Telefono=new Telefono
+                                    {
+                                        Marca=x.Telefono.Marca,
+                                        Modelo=x.Telefono.Modelo
+                                    }
+                                })
                                .ToListAsync();
 
                 //return await _context.Instalaciones

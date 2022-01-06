@@ -25,18 +25,20 @@ namespace TFBackEnd.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<App>>> GetApps()
         {
-            var list = await _context.Apps
-                        .Include(x => x.Instalaciones)
-                            .ThenInclude(x => x.Operario)
-                        .FirstAsync();
-            foreach (var instalar in list.Instalaciones)
+            try
             {
-                //foreach (var operario in instalar.Operario)
-                //{
-                //   operario=instalar.Operario.Nombre;
-                //    operario = instalar.Operario.Apellido;
+                var list = await _context.Apps
+                     .Include(x => x.Instalaciones)
+                         .ThenInclude(x => x.Operario.Instalaciones)
+                        
+                     .ToListAsync();
 
-                //}
+                return list;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
             }
 
         }
