@@ -23,7 +23,7 @@ namespace TFBackEnd.Api.Controllers
         }
 
         [HttpGet("Search")]
-        public async Task<dynamic> Search(bool status=true)
+        public async Task<dynamic> Search(bool status = true)
         {
             try
             {
@@ -32,9 +32,10 @@ namespace TFBackEnd.Api.Controllers
                         item.Exitosa == status &&
                         item.Exitosa != status
                     )
-                    .Select(item=>new { 
-                        app=item.App.Nombre,
-                        Instalacion=item.Fecha
+                    .Select(item => new
+                    {
+                        app = item.App.Nombre,
+                        Instalacion = item.Fecha
                     })
                     .ToListAsync();
 
@@ -45,7 +46,7 @@ namespace TFBackEnd.Api.Controllers
                 throw new Exception(ex.ToString()); ;
             }
         }
-   
+
         // GET: api/Instalaciones
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Instalacion>>> GetInstalaciones()
@@ -53,25 +54,36 @@ namespace TFBackEnd.Api.Controllers
             try
             {
 
-                return await _context.Instalaciones
+                var listado = await _context.Instalaciones
                                .Include(x => x.App)
-                                .Include(x=>x.Operario.Instalaciones)
-                                .Include(x => x.Telefono.Sensores)
-                                .Select(x=>new Instalacion
+                                .Include(x => x.Operario.Instalaciones)
+                                .Include(x => x.Telefono.Instalaciones)
+                                .Select(x => new Instalacion
                                 {
-                                    Id=x.Id,
-                                    Exitosa=x.Exitosa,
-                                    Fecha=x.Fecha,
+                                    Id = x.Id,
+                                    Exitosa = x.Exitosa,
+                                    Fecha = x.Fecha,
 
-                                    Telefono=new Telefono
+                                    App = new App
                                     {
-                                        Marca=x.Telefono.Marca,
-                                        Modelo=x.Telefono.Modelo
+                                        Nombre = x.App.Nombre
+                                    },
+
+                                    Operario = new Operario
+                                    {
+                                        Nombre = x.Operario.Nombre,
+                                        Apellido = x.Operario.Apellido
+                                    },
+
+                                    Telefono = new Telefono
+                                    {
+                                        Marca = x.Telefono.Marca,
+                                        Modelo = x.Telefono.Modelo
                                     }
                                 })
                                .ToListAsync();
 
-                //return await _context.Instalaciones
+                //var listado= await _context.Instalaciones
                 //        .Include(x=>x.App)
                 //        .Include(x=>x.Operario)
                 //        .Include(x=>x.Telefono)
@@ -100,6 +112,8 @@ namespace TFBackEnd.Api.Controllers
                 //        })
                 //        .ToListAsync();
 
+                return listado;
+
             }
             catch (Exception ex)
             {
@@ -110,18 +124,56 @@ namespace TFBackEnd.Api.Controllers
 
         // GET: api/Instalaciones/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Instalacion>> GetInstalacion(int id)
+        public async Task<ActionResult<Instalacion>> GetInstalacion(int? id)
         {
+
             try
             {
-                var instalacion = await _context.Instalaciones.FindAsync(id);
+                if (id == null)
+                {
+                    return BadRequest();
+                }
+
+                var instalacion = await _context.Instalaciones.FindAsync(id.Value);
 
                 if (instalacion == null)
                 {
                     return NotFound();
                 }
-                
-                return instalacion;
+
+
+                var model = await _context.Instalaciones.Where(x => x.Id == id)
+                                        .Include(x => x.App)
+                                        .Include(x => x.Operario)
+                                        .Include(x => x.Telefono)
+                                        .Select(x => new Instalacion
+                                        {
+                                            Id = x.Id,
+                                            Exitosa = x.Exitosa,
+                                            Fecha = x.Fecha,
+
+                                            Operario = new Operario
+                                            {
+                                                Nombre = x.Operario.Nombre,
+                                                Apellido = x.Operario.Apellido
+                                            },
+
+                                            App = new App
+                                            {
+                                                Nombre = x.App.Nombre
+                                            },
+                                            Telefono = new Telefono
+                                            {
+                                                Marca = x.Telefono.Marca,
+                                                Modelo = x.Telefono.Modelo,
+                                                Precio = x.Telefono.Precio
+                                            }
+                                        })
+                                .FirstOrDefaultAsync();
+
+
+
+                return model;
             }
             catch (Exception ex)
             {
@@ -129,7 +181,7 @@ namespace TFBackEnd.Api.Controllers
                 throw new Exception(ex.ToString());
             }
 
-            
+
         }
 
         // PUT: api/Instalaciones/5
@@ -138,7 +190,7 @@ namespace TFBackEnd.Api.Controllers
         public async Task<IActionResult> PutInstalacion(int id, Instalacion instalacion)
         {
 
-           
+
             if (id != instalacion.Id)
             {
                 return BadRequest();
@@ -147,11 +199,11 @@ namespace TFBackEnd.Api.Controllers
             instalacion.Fecha = DateTime.Now;
             _context.Entry(instalacion).State = EntityState.Modified;
 
-            if (instalacion==null)
+            if (instalacion == null)
             {
                 return NotFound();
             }
-            
+
             try
             {
                 await _context.SaveChangesAsync();
@@ -182,10 +234,15 @@ namespace TFBackEnd.Api.Controllers
                 {
                     instalacion.Fecha = DateTime.Now;
                     _context.Instalaciones.Add(instalacion);
-                    await _context.SaveChangesAsync();
+                    int result = await _context.SaveChangesAsync();
+
+                    if (result == 0)
+                        return NotFound();
+                    else
+                        return Ok(instalacion.Id);
                 }
 
-                //return instalacion;
+                return NotFound();
             }
             catch (Exception ex)
             {
