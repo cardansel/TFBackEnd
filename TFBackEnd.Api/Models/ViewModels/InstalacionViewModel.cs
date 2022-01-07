@@ -14,6 +14,7 @@ namespace TFBackEnd.Api.Models.ViewModels
 
         public string Operario { get; set; }
         public string App { get; set; }
+        public string Telefono { get; set; }
 
     }
 }
