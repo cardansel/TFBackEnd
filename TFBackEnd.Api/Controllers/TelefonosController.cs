@@ -217,6 +217,8 @@ namespace TFBackEnd.Api.Controllers
                 _context.Telefonos.Remove(telefono);
                 await _context.SaveChangesAsync();
 
+                return CreatedAtAction("GetTelefonos", new { id = telefono.Id }, telefono);
+
             }
             catch (Exception ex)
             {
@@ -225,6 +227,7 @@ namespace TFBackEnd.Api.Controllers
             }
             // Devolvemos NO CONTENT porque ya no existe
             return NoContent();
+
         }
     }
 }
