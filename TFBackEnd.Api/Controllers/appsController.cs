@@ -23,14 +23,14 @@ namespace TFBackEnd.Api.Controllers
 
         // GET: api/Apps
         [HttpGet]
-        public async Task<ActionResult<List<App>>> GetApps()
+        public async Task<ActionResult<IEnumerable<App>>> GetApps()
         {
             try
             {
                 var list = await _context.Apps
                      .Include(x => x.Instalaciones)
                          .ThenInclude(x => x.Operario.Instalaciones)
-                        
+
                      .ToListAsync();
 
                 return list;
@@ -45,53 +45,30 @@ namespace TFBackEnd.Api.Controllers
 
         // GET: api/Apps/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<App>> GetApp(int id)
+        public async Task<ActionResult<App>> GetApp(int? id)
         {
-            var app = await _context.Apps.FindAsync(id);
-
-            if (app == null)
-            {
-                return NotFound();
-            }
-
-            return app;
-        }
-
-
-        [HttpGet("search")]
-        public async Task<dynamic> Search(string install)
-        {
-
-            //Mover a instalaciones
             try
             {
-                return await _context.Instalaciones.Where(item => item.App.Nombre == install)
-                   .Select(item => new
-                   {
-                       Instalacion = item.App,
-                       apli = item.App.Instalaciones.Where(item => item.App.Nombre == install)
-                           .Select(item => new
-                           {
-                               item.App.Nombre,
-                               Instalacion = item.App.Instalaciones.Select(item => new
-                               {
-                                   item.Exitosa,
-                                   item.Fecha,
-                                   item.Operario.Apellido,
-                                   item.App.Nombre,
-                                   item.Telefono.Marca,
-                                   item.Telefono.Modelo
-                               })
-                           })
+                if (id == null)
+                {
+                    return BadRequest();
+                }
+                var app = await _context.Apps.FindAsync(id.Value);
 
-                   }).ToListAsync();
+                if (app == null)
+                {
+                    return NotFound();
+                }
+
+                return app;
             }
             catch (Exception ex)
             {
+
                 throw new Exception(ex.ToString());
             }
-        }
 
+        }
 
         // PUT: api/Apps/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -130,10 +107,21 @@ namespace TFBackEnd.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<App>> PostApp(App app)
         {
-            _context.Apps.Add(app);
-            await _context.SaveChangesAsync();
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _context.Apps.Add(app);
+                    await _context.SaveChangesAsync();
+                }
 
-            return CreatedAtAction("GetApp", new { id = app.Id }, app);
+                return CreatedAtAction("GetApp", new { id = app.Id }, app);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
         }
 
         // DELETE: api/Apps/5

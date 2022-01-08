@@ -67,9 +67,15 @@ namespace TFBackEnd.Api.Controllers
                 sensor = await _context.Sensor.FindAsync(id);
 
                 if (sensor == null)
-                {
                     return NotFound();
-                }
+
+                var model = await _context.Sensor.Where(x => x.Id == id)
+                                .Include(x => x.Telefonos)
+                                .FirstOrDefaultAsync();
+
+                return model;
+
+
             }
             catch (Exception ex)
             {

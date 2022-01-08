@@ -18,6 +18,7 @@ namespace TFBackEnd.Api.Models
         public string Modelo { get; set; }
         public float Precio { get; set; }
 
+
         public virtual ICollection<Instalacion> Instalaciones { get; set; }
 
         

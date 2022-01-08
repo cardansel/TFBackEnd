@@ -27,17 +27,34 @@ namespace TFBackEnd.Api.Controllers
         {
             try
             {
-                return await _context.Instalaciones
-                    .Where(item =>
-                        item.Exitosa == status &&
-                        item.Exitosa != status
-                    )
-                    .Select(item => new
-                    {
-                        app = item.App.Nombre,
-                        Instalacion = item.Fecha
-                    })
-                    .ToListAsync();
+                return await _context.Instalaciones.Where(x=>x.Exitosa==status)
+                            .Include(x=>x.Operario)
+                            .Include(x=>x.Telefono)
+                            .Include(x=>x.App)
+                            .Select(x => new Instalacion
+                            {
+                                Id = x.Id,
+                                Exitosa = x.Exitosa,
+                                Fecha = x.Fecha,
+
+                                App = new App
+                                {
+                                    Nombre = x.App.Nombre
+                                },
+
+                                Operario = new Operario
+                                {
+                                    Nombre = x.Operario.Nombre,
+                                    Apellido = x.Operario.Apellido
+                                },
+
+                                Telefono = new Telefono
+                                {
+                                    Marca = x.Telefono.Marca,
+                                    Modelo = x.Telefono.Modelo
+                                }
+                            })
+                            .ToListAsync();
 
             }
             catch (Exception ex)
@@ -46,6 +63,8 @@ namespace TFBackEnd.Api.Controllers
                 throw new Exception(ex.ToString()); ;
             }
         }
+
+
 
         // GET: api/Instalaciones
         [HttpGet]
@@ -83,34 +102,7 @@ namespace TFBackEnd.Api.Controllers
                                 })
                                .ToListAsync();
 
-                //var listado= await _context.Instalaciones
-                //        .Include(x=>x.App)
-                //        .Include(x=>x.Operario)
-                //        .Include(x=>x.Telefono)
-                //        .Select(x => new Instalacion
-                //        {
-                //            Id = x.Id,
-                //            Exitosa = x.Exitosa,
-                //            Fecha = x.Fecha,
-
-                //            Operario = new Operario
-                //            {
-                //                Nombre = x.Operario.Nombre,
-                //                Apellido = x.Operario.Apellido
-                //            },
-
-                //            App = new App
-                //            {
-                //                Nombre = x.App.Nombre
-                //            },
-                //            Telefono = new Telefono
-                //            {
-                //                Marca = x.Telefono.Marca,
-                //                Modelo = x.Telefono.Modelo,
-                //                Precio = x.Telefono.Precio
-                //            }
-                //        })
-                //        .ToListAsync();
+                
 
                 return listado;
 
@@ -166,7 +158,7 @@ namespace TFBackEnd.Api.Controllers
                                             {
                                                 Marca = x.Telefono.Marca,
                                                 Modelo = x.Telefono.Modelo,
-                                                Precio = x.Telefono.Precio
+                                                Instalaciones=x.Telefono.Instalaciones
                                             }
                                         })
                                 .FirstOrDefaultAsync();

@@ -33,10 +33,9 @@ namespace TFBackEnd.Api.Controllers
             try
             {
                 return await _context.Telefonos
-                      .Include(x => x.Sensores)
-
-                          .AsNoTracking()
-                      .ToListAsync();
+                             .Include(x => x.Sensores)
+                             .AsNoTracking()
+                             .ToListAsync();
 
             }
             catch (Exception ex)
@@ -47,34 +46,6 @@ namespace TFBackEnd.Api.Controllers
 
         }
 
-
-        [HttpGet("search")]
-        public async Task<dynamic> Search(string sensor = "Giroscopio", string aplicacion = "WhatsApp")
-        {
-            try
-            {
-                return await _context.Instalaciones.Where(item => item.App.Nombre == aplicacion)
-                                   .Select(item => new
-                                   {
-                                       App = item.App.Nombre,
-                                       Sensor = item.Telefono.Sensores.Where(item => item.Nombre == sensor)
-                                           .Select(item => new
-                                           {
-                                               item.Nombre,
-                                               Telefono = item.Telefonos.Select(item => new
-                                               {
-                                                   item.Marca,
-                                                   item.Modelo
-                                               })
-                                           })
-
-                                   }).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.ToString());
-            }
-        }
 
         // GET api/<TelefonosController>/5
         [HttpGet("{id}")]
@@ -95,6 +66,16 @@ namespace TFBackEnd.Api.Controllers
                 {
                     return NotFound();
                 }
+
+                var model = await _context.Telefonos.Where(x => x.Id == id)
+                                   .Include(x => x.Sensores)
+                                   .OrderBy(x => x.Id)
+                                   .FirstOrDefaultAsync();
+
+                if (model != null)
+                    return model;
+                else
+                    return NotFound();
             }
             catch (Exception ex)
             {
@@ -102,7 +83,7 @@ namespace TFBackEnd.Api.Controllers
                 throw new Exception(ex.ToString());
             }
 
-            return telefono;
+
         }
 
         // POST api/<TelefonosController>
