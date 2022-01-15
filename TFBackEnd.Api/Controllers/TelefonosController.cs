@@ -32,10 +32,7 @@ namespace TFBackEnd.Api.Controllers
         {
             try
             {
-                return await _context.Telefonos
-                             .Include(x => x.Sensores)
-                             .AsNoTracking()
-                             .ToListAsync();
+                return await _context.Telefonos.ToListAsync();
 
             }
             catch (Exception ex)
@@ -206,6 +203,35 @@ namespace TFBackEnd.Api.Controllers
             }
             // Devolvemos NO CONTENT porque ya no existe
             return NoContent();
+        }
+
+        [HttpGet("Info")]
+        public async Task<dynamic> Info(string sensor, string app)
+        {
+            try
+            {
+                return await _context.Instalaciones.Where(item => item.App.Nombre == app) 
+                  .Select(item => new
+                  {
+                      App = item.App.Nombre,
+                      Sensor = item.Telefono.Sensores.Where(item => item.Nombre == sensor)
+                          .Select(item => new
+                          {
+                              item.Nombre,
+                              Telefono = item.Telefonos.Select(item => new
+                              {
+                                  item.Marca,
+                                  item.Modelo
+                              })
+                          })
+
+                  }).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
         }
     }
 }

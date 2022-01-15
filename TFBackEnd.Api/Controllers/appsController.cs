@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TFBackEnd.Api.Data;
 using TFBackEnd.Api.Models;
+using TFBackEnd.Api.Models.ViewModels;
 
 namespace TFBackEnd.Api.Controllers
 {
@@ -41,6 +42,24 @@ namespace TFBackEnd.Api.Controllers
                 throw new Exception(ex.ToString());
             }
 
+        }
+
+      [HttpGet("Operaciones")]
+      public async Task<ActionResult<List<App>>>Operaciones()
+        {
+            try
+            {
+                List<App> apps =await _context.Apps.Include(x => x.Instalaciones)
+                            .ThenInclude(x => x.Telefono)
+                            .ToListAsync();
+
+                return apps;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
         }
 
         // GET: api/Apps/5
