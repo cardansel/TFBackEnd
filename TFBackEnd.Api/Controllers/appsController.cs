@@ -45,12 +45,13 @@ namespace TFBackEnd.Api.Controllers
         }
 
       [HttpGet("Operaciones")]
-      public async Task<ActionResult<List<App>>>Operaciones()
+      public async Task<ActionResult<List<App>>>GetAllByName(string apli)
         {
             try
             {
-                List<App> apps =await _context.Apps.Include(x => x.Instalaciones)
-                            .ThenInclude(x => x.Telefono)
+                List<App> apps =await _context.Apps.Where(x=>x.Nombre.Equals(apli))
+                            .Include(x=>x.Instalaciones)
+                               .ThenInclude(x=>x.Telefono)
                             .ToListAsync();
 
                 return apps;

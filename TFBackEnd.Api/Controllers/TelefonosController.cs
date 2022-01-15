@@ -205,33 +205,35 @@ namespace TFBackEnd.Api.Controllers
             return NoContent();
         }
 
-        [HttpGet("Info")]
-        public async Task<dynamic> Info(string sensor, string app)
-        {
-            try
-            {
-                return await _context.Instalaciones.Where(item => item.App.Nombre == app) 
-                  .Select(item => new
-                  {
-                      App = item.App.Nombre,
-                      Sensor = item.Telefono.Sensores.Where(item => item.Nombre == sensor)
-                          .Select(item => new
-                          {
-                              item.Nombre,
-                              Telefono = item.Telefonos.Select(item => new
-                              {
-                                  item.Marca,
-                                  item.Modelo
-                              })
-                          })
+        //[HttpGet("Info")]
+        //public async Task<dynamic> Info(string sensor, string app)
+        //{
+        //    try
+        //    {
+        //        return await _context.Instalaciones.Where(item => item.App.Nombre.Equals(app) 
+        //          .Select(item => new
+        //          {
+        //              App = item.App.Nombre,
+        //              Sensor = item.Telefono.Sensores.Where(item => item.Nombre=)
+        //                  .Select(item => new
+        //                  {
+        //                      item.Nombre,
+        //                      Telefono = item.Telefonos.Select(item => new
+        //                      {
+        //                          item.Marca,
+        //                          item.Modelo
+        //                      })
+        //                  })
 
-                  }).ToListAsync();
-            }
-            catch (Exception ex)
-            {
+        //          }).ToListAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                throw new Exception(ex.ToString());
-            }
-        }
+        //        throw new Exception(ex.ToString());
+        //    }
+        //}
+
+       
     }
 }
