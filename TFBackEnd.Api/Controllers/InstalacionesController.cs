@@ -212,7 +212,7 @@ namespace TFBackEnd.Api.Controllers
             {
                 if (!InstalacionExists(id))
                 {
-                    return NotFound();
+                    return NotFound();                    
                 }
                 else
                 {
@@ -220,7 +220,8 @@ namespace TFBackEnd.Api.Controllers
                 }
             }
 
-            return NoContent();
+            //return NoContent();
+            return CreatedAtAction("GetInstalaciones", new { id = instalacion.Id }, instalacion);
         }
 
         // POST: api/Instalaciones
@@ -239,7 +240,8 @@ namespace TFBackEnd.Api.Controllers
                     if (result == 0)
                         return NotFound();
                     else
-                        return Ok(instalacion.Id);
+                        //return Ok(instalacion.Id);
+                        return CreatedAtAction("GetInstalaciones", new { id = instalacion.Id }, instalacion);
                 }
 
                 return NotFound();
@@ -250,8 +252,6 @@ namespace TFBackEnd.Api.Controllers
                 throw new Exception(ex.ToString());
             }
 
-
-            return CreatedAtAction("GetInstalacion", new { id = instalacion.Id }, instalacion);
         }
 
         // DELETE: api/Instalaciones/5
@@ -267,7 +267,8 @@ namespace TFBackEnd.Api.Controllers
             _context.Instalaciones.Remove(instalacion);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            //return NoContent();
+            return CreatedAtAction("GetInstalaciones", new { id = instalacion.Id }, instalacion);
         }
 
         private bool InstalacionExists(int id)

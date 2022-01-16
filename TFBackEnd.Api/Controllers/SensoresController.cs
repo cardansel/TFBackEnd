@@ -204,6 +204,7 @@ namespace TFBackEnd.Api.Controllers
                 //Ahora borro el sensor
                 _context.Sensor.Remove(sensor);
                 await _context.SaveChangesAsync();
+                return CreatedAtAction("GetSensor", new { id = sensor.Id }, sensor);
             }
             catch (Exception ex)
             {
