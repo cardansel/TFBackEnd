@@ -155,6 +155,7 @@ namespace TFBackEnd.Api.Controllers
 
         private bool AppExists(int id)
         {
+            //retorna 
             return _context.Apps.Any(e => e.Id == id);
         }
     }
