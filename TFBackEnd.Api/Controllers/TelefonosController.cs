@@ -262,5 +262,27 @@ namespace TFBackEnd.Api.Controllers
                 throw new Exception(ex.ToString());
             }
         }
+
+        [HttpGet("GetInfo")]
+        public async Task<ActionResult<IEnumerable<Instalacion>>> GetInfo()
+        {
+            try
+            {
+
+                var telefonos = await _context.Instalaciones
+                    .Include(x => x.App)
+                    .Include(x => x.Telefono)
+                    .ThenInclude(x => x.Sensores)
+                    .OrderBy(x => x.Telefono.Marca)
+                    .ToListAsync();
+
+                return telefonos;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+        }
     }
 }
