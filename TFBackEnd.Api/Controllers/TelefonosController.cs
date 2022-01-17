@@ -229,5 +229,38 @@ namespace TFBackEnd.Api.Controllers
             return NoContent();
 
         }
+
+        [HttpGet("Info")]
+        public async Task<ActionResult<TelefonoViewModel>> Informacion(string modelo)
+        {
+            try
+            {
+                return await (from i in _context.Instalaciones
+                              join t in _context.Telefonos
+                              on i.TelefonoId equals t.Id
+                              join a in _context.Apps
+                              on i.AppId equals a.Id
+                              join o in _context.Operarios
+                              on i.OperarioId equals o.Id
+
+                              select new TelefonoViewModel
+                              {
+                                  Marca = t.Marca,
+                                  Modelo = t.Modelo,
+                                  //Exitosa=i.Exitosa,
+                                  App = a.Nombre,
+                                  OperarioNombre = o.Nombre,
+                                  OperarioApellido = o.Apellido,
+
+                              }).Where(x => x.Modelo.Contains(modelo)).FirstOrDefaultAsync();
+
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+        }
     }
 }
