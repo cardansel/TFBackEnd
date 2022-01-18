@@ -32,7 +32,12 @@ namespace TFBackEnd.Api.Controllers
         {
             try
             {
-                return await _context.Telefonos.ToListAsync();
+                //return await _context.Telefonos.ToListAsync();
+
+               return  await _context.Telefonos
+                                   .Include(x => x.Sensores)
+                                   .OrderBy(x => x.Id)
+                                   .ToListAsync();
 
             }
             catch (Exception ex)
@@ -241,27 +246,27 @@ namespace TFBackEnd.Api.Controllers
             }
         }
 
-        [HttpGet("GetInfo")]
-        public async Task<ActionResult<IEnumerable<Instalacion>>> GetInfo()
-        {
-            try
-            {
+        //[HttpGet("GetInfo")]
+        //public async Task<ActionResult<IEnumerable<Instalacion>>> GetInfo()
+        //{
+        //    try
+        //    {
 
-                var telefonos = await _context.Instalaciones
-                    .Include(x => x.App)
-                    .Include(x => x.Telefono)
-                    .ThenInclude(x => x.Sensores)
-                    .OrderBy(x => x.Telefono.Marca)
-                    .ToListAsync();
+        //        var telefonos = await _context.Instalaciones
+        //            .Include(x => x.App)
+        //            .Include(x => x.Telefono)
+        //            .ThenInclude(x => x.Sensores)
+        //            .OrderBy(x => x.Telefono.Marca)
+        //            .ToListAsync();
 
-                return telefonos;
-            }
-            catch (Exception ex)
-            {
+        //        return telefonos;
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                throw new Exception(ex.ToString());
-            }
-        }
+        //        throw new Exception(ex.ToString());
+        //    }
+        //}
 
         //[HttpGet("Info")]
         //public async Task<dynamic> Info(string sensor, string app)

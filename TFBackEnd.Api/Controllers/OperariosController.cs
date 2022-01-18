@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TFBackEnd.Api.Data;
 using TFBackEnd.Api.Models;
+using TFBackEnd.Api.Models.ViewModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,25 +41,34 @@ namespace TFBackEnd.Api.Controllers
 
 
         [HttpGet("InstallDate")]
-        public async Task<dynamic> InstallDate(DateTime date)
+        public async Task<dynamic> InstallDate()
         {
-            date = date.Date;
-            //Modificar
+         
             try
             {
-                return await _context.Operarios
-                        .Select(item => new
-                        {
-                            item.Nombre,
-                            item.Apellido,
 
-                            apliInstall = _context.Instalaciones
-                                .Where(i => i.Fecha.Date == date
-                                       &&
-                                        i.Operario.Id == item.Id
-                                        )
-                                
-                        }).ToListAsync();
+                var instalacion = await _context.Instalaciones.Where(x=>x.Id==x.OperarioId)
+                               .Include(i => i.Operario).OrderBy(x=>x.Operario.Id)
+                               .Include(i => i.App)
+                               
+                               .Select(i => new Instalacion()
+                               {
+                                   Id = i.Id,
+                                   Exitosa = i.Exitosa,
+                                   Fecha = i.Fecha,
+                                   Operario = new Operario()
+                                   {
+                                       Nombre = i.Operario.Nombre,
+                                       Apellido = i.Operario.Apellido
+                                   },
+                                   App = new App()
+                                   {
+                                       Nombre = i.App.Nombre
+                                   }
+
+                               }).ToListAsync();
+
+                return instalacion;
             }
             catch (Exception ex)
             {
@@ -118,7 +128,7 @@ namespace TFBackEnd.Api.Controllers
 
         // PUT api/<OperariosController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOperario(int id,Operario operario)
+        public async Task<IActionResult> PutOperario(int id, Operario operario)
         {
             if (id != operario.Id)
             {
@@ -143,7 +153,7 @@ namespace TFBackEnd.Api.Controllers
                 }
             }
 
-            return CreatedAtAction("GetOperarios",new { id=operario.Id},operario);
+            return CreatedAtAction("GetOperarios", new { id = operario.Id }, operario);
         }
 
         // DELETE api/<OperariosController>/5
@@ -159,7 +169,7 @@ namespace TFBackEnd.Api.Controllers
             _context.Operarios.Remove(operario);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetOperarios",new { id=operario.Id},operario);
+            return CreatedAtAction("GetOperarios", new { id = operario.Id }, operario);
         }
 
         private bool OperarioExists(int id)

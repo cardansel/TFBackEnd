@@ -79,7 +79,7 @@ namespace TFBackEnd.Api.Data
 
         public DbSet<Sensor> Sensor { get; set; }
 
-        
+      
  
     }
 }
