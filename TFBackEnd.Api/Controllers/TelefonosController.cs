@@ -195,6 +195,8 @@ namespace TFBackEnd.Api.Controllers
                 _context.Telefonos.Remove(telefono);
                 await _context.SaveChangesAsync();
 
+                return CreatedAtAction("GetTelefonos", new { id = telefono.Id }, telefono);
+
             }
             catch (Exception ex)
             {
@@ -203,6 +205,62 @@ namespace TFBackEnd.Api.Controllers
             }
             // Devolvemos NO CONTENT porque ya no existe
             return NoContent();
+
+        }
+
+        [HttpGet("Info")]
+        public async Task<ActionResult<TelefonoViewModel>> Informacion(string modelo)
+        {
+            try
+            {
+                return await (from i in _context.Instalaciones
+                              join t in _context.Telefonos
+                              on i.TelefonoId equals t.Id
+                              join a in _context.Apps
+                              on i.AppId equals a.Id
+                              join o in _context.Operarios
+                              on i.OperarioId equals o.Id
+
+                              select new TelefonoViewModel
+                              {
+                                  Marca = t.Marca,
+                                  Modelo = t.Modelo,
+                                  //Exitosa=i.Exitosa,
+                                  App = a.Nombre,
+                                  OperarioNombre = o.Nombre,
+                                  OperarioApellido = o.Apellido,
+
+                              }).Where(x => x.Modelo.Contains(modelo)).FirstOrDefaultAsync();
+
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
+        }
+
+        [HttpGet("GetInfo")]
+        public async Task<ActionResult<IEnumerable<Instalacion>>> GetInfo()
+        {
+            try
+            {
+
+                var telefonos = await _context.Instalaciones
+                    .Include(x => x.App)
+                    .Include(x => x.Telefono)
+                    .ThenInclude(x => x.Sensores)
+                    .OrderBy(x => x.Telefono.Marca)
+                    .ToListAsync();
+
+                return telefonos;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.ToString());
+            }
         }
 
         //[HttpGet("Info")]

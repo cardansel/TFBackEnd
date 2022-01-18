@@ -51,12 +51,13 @@ namespace TFBackEnd.Api.Controllers
                         {
                             item.Nombre,
                             item.Apellido,
+
                             apliInstall = _context.Instalaciones
-                                .Where(i => i.Fecha.Date == date &&
-                                        i.Exitosa == true &&
-                                        i.Exitosa==false &&
-                                        i.Operario.Id == item.Id)
-                                .Count()
+                                .Where(i => i.Fecha.Date == date
+                                       &&
+                                        i.Operario.Id == item.Id
+                                        )
+                                
                         }).ToListAsync();
             }
             catch (Exception ex)
