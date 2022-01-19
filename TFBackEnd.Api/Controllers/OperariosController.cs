@@ -43,32 +43,46 @@ namespace TFBackEnd.Api.Controllers
         [HttpGet("InstallDate")]
         public async Task<dynamic> InstallDate()
         {
-         
+            
             try
             {
 
-                var instalacion = await _context.Instalaciones.Where(x=>x.Id==x.OperarioId)
-                               .Include(i => i.Operario).OrderBy(x=>x.Operario.Id)
-                               .Include(i => i.App)
-                               
-                               .Select(i => new Instalacion()
-                               {
-                                   Id = i.Id,
-                                   Exitosa = i.Exitosa,
-                                   Fecha = i.Fecha,
-                                   Operario = new Operario()
-                                   {
-                                       Nombre = i.Operario.Nombre,
-                                       Apellido = i.Operario.Apellido
-                                   },
-                                   App = new App()
-                                   {
-                                       Nombre = i.App.Nombre
-                                   }
+                var resultado = await _context.Instalaciones
+                                .Include(x => x.Operario)
+                                .Include(x=>x.App)
+                                .GroupBy(x => new {x.Operario.Nombre, x.Operario.Apellido, x.Operario.Id })
+                                .Select(x => new { Operario = x.Key, Total = x.Count() })
+                                
+                                .ToListAsync();
 
-                               }).ToListAsync();
+                return resultado;
 
-                return instalacion;
+
+                #region MyRegion
+                //var instalacion = await _context.Instalaciones.Where(x=>x.Id==x.OperarioId)
+                //               .Include(i => i.Operario).OrderBy(x=>x.Operario.Id)
+                //               .Include(i => i.App)
+
+                //               .Select(i => new Instalacion()
+                //               {
+                //                   Id = i.Id,
+                //                   Exitosa = i.Exitosa,
+                //                   Fecha = i.Fecha,
+                //                   Operario = new Operario()
+                //                   {
+                //                       Nombre = i.Operario.Nombre,
+                //                       Apellido = i.Operario.Apellido
+                //                   },
+                //                   App = new App()
+                //                   {
+                //                       Nombre = i.App.Nombre
+                //                   }
+
+                //               }).ToListAsync();
+
+                //return instalacion;
+                #endregion
+
             }
             catch (Exception ex)
             {

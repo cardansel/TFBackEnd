@@ -54,6 +54,7 @@ namespace TFBackEnd.Api.Controllers
                                     Modelo = x.Telefono.Modelo
                                 }
                             })
+                            
                             .ToListAsync();
 
             }
