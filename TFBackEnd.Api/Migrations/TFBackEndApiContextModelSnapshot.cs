@@ -188,9 +188,6 @@ namespace TFBackEnd.Api.Migrations
                     b.Property<float>("Precio")
                         .HasColumnType("float");
 
-                    b.Property<string>("RutaFoto")
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.ToTable("Telefonos");
