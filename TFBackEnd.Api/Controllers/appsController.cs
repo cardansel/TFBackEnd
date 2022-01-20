@@ -28,6 +28,7 @@ namespace TFBackEnd.Api.Controllers
         {
             try
             {
+                //var list = await _context.Apps.ToListAsync();
                 var list = await _context.Apps
                      .Include(x => x.Instalaciones)
                          .ThenInclude(x => x.Operario.Instalaciones)
