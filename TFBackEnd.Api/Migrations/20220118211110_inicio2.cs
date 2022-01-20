@@ -4,7 +4,7 @@ using MySql.EntityFrameworkCore.Metadata;
 
 namespace TFBackEnd.Api.Migrations
 {
-    public partial class inicio : Migration
+    public partial class inicio2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

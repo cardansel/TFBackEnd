@@ -9,8 +9,8 @@ using TFBackEnd.Api.Data;
 namespace TFBackEnd.Api.Migrations
 {
     [DbContext(typeof(TFBackEndApiContext))]
-    [Migration("20220106093712_inicio")]
-    partial class inicio
+    [Migration("20220118211110_inicio2")]
+    partial class inicio2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
